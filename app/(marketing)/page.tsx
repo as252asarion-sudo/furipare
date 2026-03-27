@@ -8,7 +8,29 @@ export const metadata: Metadata = {
 }
 
 export default function LandingPage() {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'フリパレ',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    description: 'フリーランス・副業ワーカーのための見積書・請求書・契約書SaaS',
+    url: 'https://furipare.com',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'JPY',
+    },
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="border-b border-slate-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
@@ -151,5 +173,6 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+    </>
   )
 }
