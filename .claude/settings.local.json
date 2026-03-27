@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(cp -r app/estimates \"app/\\(app\\)/estimates\")",
+      "Bash(cp -r app/invoices \"app/\\(app\\)/invoices\")",
+      "Bash(cp -r app/contracts \"app/\\(app\\)/contracts\")",
+      "Bash(cp -r app/clients \"app/\\(app\\)/clients\")",
+      "Bash(cp -r app/settings \"app/\\(app\\)/settings\")",
+      "Bash(npm run:*)"
+    ]
+  }
+}

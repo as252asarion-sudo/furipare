@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>フリパレ X アセット</title>
+<style>
+  body { background: #f1f5f9; font-family: sans-serif; padding: 40px; }
+  h2 { color: #334155; font-size: 14px; margin: 30px 0 10px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .note { background: #e0e7ff; color: #3730a3; font-size: 12px; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; display: inline-block; }
+  .canvas-wrap { display: inline-block; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 4px; background: white; }
+</style>
+</head>
+<body>
+
+<h1 style="color:#4f46e5;font-size:20px;margin-bottom:4px;">フリパレ X（Twitter）アセット</h1>
+<p style="color:#64748b;font-size:13px;margin-top:0;">各画像を右クリック→「名前を付けて画像を保存」で保存してください</p>
+
+<!-- ========== アイコン ========== -->
+<h2>① プロフィールアイコン（400 × 400px）</h2>
+<p class="note">右クリック → 「名前を付けて画像を保存」→ icon.png として保存</p>
+<div class="canvas-wrap">
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="400" height="400" rx="80" fill="url(#bg)"/>
+
+  <!-- 書類アイコン（白） -->
+  <rect x="120" y="90" width="120" height="155" rx="10" fill="white" opacity="0.95"/>
+  <rect x="135" y="115" width="70" height="8" rx="4" fill="#6366f1"/>
+  <rect x="135" y="133" width="90" height="6" rx="3" fill="#a5b4fc"/>
+  <rect x="135" y="149" width="80" height="6" rx="3" fill="#a5b4fc"/>
+  <rect x="135" y="165" width="85" height="6" rx="3" fill="#a5b4fc"/>
+  <rect x="135" y="181" width="60" height="6" rx="3" fill="#a5b4fc"/>
+  <!-- 折り角 -->
+  <polygon points="220,90 240,110 220,110" fill="#c7d2fe"/>
+
+  <!-- 2枚目書類（重なり） -->
+  <rect x="150" y="150" width="120" height="155" rx="10" fill="white" opacity="0.85"/>
+  <rect x="165" y="175" width="70" height="8" rx="4" fill="#6366f1"/>
+  <rect x="165" y="193" width="90" height="6" rx="3" fill="#c4b5fd"/>
+  <rect x="165" y="209" width="75" height="6" rx="3" fill="#c4b5fd"/>
+  <rect x="165" y="225" width="85" height="6" rx="3" fill="#c4b5fd"/>
+  <polygon points="250,150 270,170 250,170" fill="#ddd6fe"/>
+
+  <!-- フリパレ テキスト -->
+  <text x="200" y="335" text-anchor="middle" font-family="'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif" font-size="36" font-weight="700" fill="white" letter-spacing="2">フリパレ</text>
+  <text x="200" y="362" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#c7d2fe" letter-spacing="1">furipare.vercel.app</text>
+</svg>
+</div>
+
+<br><br>
+
+<!-- ========== ヘッダー ========== -->
+<h2>② ヘッダー画像（1500 × 500px）</h2>
+<p class="note">右クリック → 「名前を付けて画像を保存」→ header.png として保存（表示は縮小版です）</p>
+<div class="canvas-wrap">
+<svg width="1500" height="500" viewBox="0 0 1500 500" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+  <defs>
+    <linearGradient id="hbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5"/>
+      <stop offset="60%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="card1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.18"/>
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.06"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="1500" height="500" fill="url(#hbg)"/>
+
+  <!-- 装飾サークル -->
+  <circle cx="1300" cy="-50" r="300" fill="white" opacity="0.04"/>
+  <circle cx="1400" cy="550" r="250" fill="white" opacity="0.04"/>
+  <circle cx="100" cy="450" r="200" fill="white" opacity="0.04"/>
+
+  <!-- 浮かぶ書類カード（右側装飾） -->
+  <rect x="900" y="60" width="200" height="260" rx="16" fill="url(#card1)" stroke="white" stroke-opacity="0.2" stroke-width="1"/>
+  <rect x="920" y="90" width="100" height="12" rx="6" fill="white" opacity="0.6"/>
+  <rect x="920" y="114" width="140" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="920" y="130" width="120" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="920" y="146" width="130" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="920" y="162" width="100" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="920" y="200" width="80" height="8" rx="4" fill="white" opacity="0.15"/>
+  <rect x="920" y="218" width="140" height="8" rx="4" fill="white" opacity="0.15"/>
+  <rect x="920" y="234" width="110" height="8" rx="4" fill="white" opacity="0.15"/>
+  <rect x="920" y="268" width="160" height="28" rx="8" fill="white" opacity="0.2"/>
+  <text x="1000" y="287" text-anchor="middle" font-family="sans-serif" font-size="12" fill="white" opacity="0.8">見積書</text>
+
+  <rect x="1120" y="130" width="200" height="250" rx="16" fill="url(#card1)" stroke="white" stroke-opacity="0.2" stroke-width="1"/>
+  <rect x="1140" y="160" width="100" height="12" rx="6" fill="white" opacity="0.6"/>
+  <rect x="1140" y="184" width="140" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="1140" y="200" width="120" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="1140" y="216" width="130" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="1140" y="258" width="160" height="28" rx="8" fill="white" opacity="0.2"/>
+  <text x="1220" y="277" text-anchor="middle" font-family="sans-serif" font-size="12" fill="white" opacity="0.8">請求書</text>
+
+  <rect x="1330" y="80" width="200" height="270" rx="16" fill="url(#card1)" stroke="white" stroke-opacity="0.2" stroke-width="1"/>
+  <rect x="1350" y="110" width="100" height="12" rx="6" fill="white" opacity="0.6"/>
+  <rect x="1350" y="134" width="140" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="1350" y="150" width="110" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="1350" y="166" width="130" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="1350" y="182" width="100" height="8" rx="4" fill="white" opacity="0.25"/>
+  <rect x="1350" y="310" width="160" height="28" rx="8" fill="white" opacity="0.2"/>
+  <text x="1430" y="329" text-anchor="middle" font-family="sans-serif" font-size="12" fill="white" opacity="0.8">契約書</text>
+
+  <!-- メインテキスト -->
+  <text x="120" y="195" font-family="'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif" font-size="72" font-weight="700" fill="white" letter-spacing="4">フリパレ</text>
+
+  <!-- キャッチコピー -->
+  <text x="120" y="255" font-family="'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif" font-size="26" fill="white" opacity="0.9" letter-spacing="1">フリーランスの書類地獄を、終わらせよう。</text>
+
+  <!-- サブコピー -->
+  <text x="122" y="300" font-family="'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif" font-size="17" fill="#c7d2fe" letter-spacing="0.5">見積書・請求書・契約書を、職種別テンプレートで5分で作成</text>
+
+  <!-- URL バッジ -->
+  <rect x="120" y="340" width="310" height="44" rx="22" fill="white" opacity="0.15"/>
+  <text x="275" y="368" text-anchor="middle" font-family="sans-serif" font-size="17" fill="white" letter-spacing="1">🔗 furipare.vercel.app</text>
+
+  <!-- 無料バッジ -->
+  <rect x="450" y="340" width="120" height="44" rx="22" fill="white" opacity="0.9"/>
+  <text x="510" y="368" text-anchor="middle" font-family="'Hiragino Kaku Gothic ProN',sans-serif" font-size="16" font-weight="700" fill="#4f46e5">無料で始める</text>
+</svg>
+</div>
+
+<br><br>
+<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:16px;max-width:600px;font-size:13px;color:#92400e;">
+  <b>保存方法</b><br>
+  各画像の上で右クリック →「名前を付けて画像を保存」<br>
+  ・アイコン → icon.png（400×400）<br>
+  ・ヘッダー → header.png（1500×500）<br><br>
+  <b>Xへの設定方法</b><br>
+  X プロフィール編集 →「アイコンを変更」「ヘッダーを変更」からアップロード
+</div>
+
+</body>
+</html>

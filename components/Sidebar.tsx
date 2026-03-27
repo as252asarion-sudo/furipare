@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 
 const nav = [
-  { href: '/', label: 'ダッシュボード', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'ダッシュボード', icon: LayoutDashboard },
   { href: '/clients', label: 'クライアント', icon: Users },
   { href: '/estimates', label: '見積書', icon: FileText },
   { href: '/invoices', label: '請求書', icon: Receipt },
