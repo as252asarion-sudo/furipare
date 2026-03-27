@@ -5,6 +5,9 @@ import Sidebar from '@/components/Sidebar'
 export const metadata: Metadata = {
   title: 'フリパレ | フリーランス書類管理',
   description: 'フリーランス・副業ワーカーのための見積・請求・契約書SaaS by ウラヤハカンパニー',
+  verification: {
+    google: 'eU9JpJEXOvnz11j1k5dK1LyOPoAmpb8LAD1_bO3D-Dw',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
