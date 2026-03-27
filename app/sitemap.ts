@@ -3,31 +3,31 @@ import type { MetadataRoute } from 'next'
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://furipare.vercel.app',
+      url: 'https://furipare.com',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
     },
     {
-      url: 'https://furipare.vercel.app/estimates',
+      url: 'https://furipare.com/estimates',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://furipare.vercel.app/invoices',
+      url: 'https://furipare.com/invoices',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://furipare.vercel.app/contracts',
+      url: 'https://furipare.com/contracts',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://furipare.vercel.app/clients',
+      url: 'https://furipare.com/clients',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
