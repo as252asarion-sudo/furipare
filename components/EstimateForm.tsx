@@ -71,7 +71,7 @@ export default function EstimateForm({ initial }: Props) {
       {/* 基本情報 */}
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <h2 className="text-sm font-semibold text-slate-700 mb-4">基本情報</h2>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">クライアント <span className="text-red-500">*</span></label>
             <select required value={clientId} onChange={e => setClientId(e.target.value)}
@@ -113,8 +113,8 @@ export default function EstimateForm({ initial }: Props) {
       {/* 明細 */}
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <h2 className="text-sm font-semibold text-slate-700 mb-4">明細</h2>
-        <div className="space-y-2">
-          <div className="grid grid-cols-12 gap-2 text-xs font-medium text-slate-500 px-1">
+        <div className="space-y-2 overflow-x-auto">
+          <div className="grid grid-cols-12 gap-2 text-xs font-medium text-slate-500 px-1 min-w-[480px]">
             <span className="col-span-5">項目</span>
             <span className="col-span-2">数量</span>
             <span className="col-span-1">単位</span>
@@ -122,7 +122,7 @@ export default function EstimateForm({ initial }: Props) {
             <span className="col-span-2 text-right">金額</span>
           </div>
           {items.map((item, idx) => (
-            <div key={idx} className="grid grid-cols-12 gap-2 items-center">
+            <div key={idx} className="grid grid-cols-12 gap-2 items-center min-w-[480px]">
               <input value={item.description} onChange={e => setItem(idx, 'description', e.target.value)}
                 className="col-span-5 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="作業内容" />
               <input type="number" min={0} value={item.quantity} onChange={e => setItem(idx, 'quantity', Number(e.target.value))}
@@ -183,7 +183,7 @@ export default function EstimateForm({ initial }: Props) {
           className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="支払条件、納期など" />
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors">
           {initial ? '更新する' : '保存する'}
         </button>

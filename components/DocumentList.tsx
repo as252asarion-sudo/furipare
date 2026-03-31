@@ -35,8 +35,8 @@ export default function DocumentList({ rows, editBase, statusMap, onDelete, empt
     )
   }
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-      <table className="w-full text-sm">
+    <div className="bg-white rounded-xl border border-slate-200 overflow-x-auto">
+      <table className="w-full text-sm min-w-[560px]">
         <thead className="bg-slate-50 border-b border-slate-200">
           <tr>
             {['案件名', '作成日', '金額（税込）', 'ステータス', ''].map(h => (

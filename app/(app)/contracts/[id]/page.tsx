@@ -18,7 +18,7 @@ export default function EditContractPage({ params }: PageProps<'/contracts/[id]'
   if (!contract) return <div className="p-8 text-slate-400">読み込み中...</div>
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader title="契約書 編集" backHref="/contracts" />
       <ContractForm initial={contract} />
     </div>

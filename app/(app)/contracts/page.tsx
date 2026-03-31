@@ -30,7 +30,7 @@ export default function ContractsPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader
         title="契約書"
         description="業務委託契約を管理します"

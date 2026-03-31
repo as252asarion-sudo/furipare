@@ -18,7 +18,7 @@ export default function EditEstimatePage({ params }: PageProps<'/estimates/[id]'
   if (!estimate) return <div className="p-8 text-slate-400">読み込み中...</div>
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader title="見積書 編集" backHref="/estimates" />
       <EstimateForm initial={estimate} />
     </div>

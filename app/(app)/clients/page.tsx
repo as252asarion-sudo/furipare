@@ -18,7 +18,7 @@ export default function ClientsPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader
         title="クライアント管理"
         description="取引先・発注元を管理します"

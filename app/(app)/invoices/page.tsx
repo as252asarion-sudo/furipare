@@ -42,7 +42,7 @@ export default function InvoicesPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader
         title="請求書"
         description="クライアントへの請求を管理します"

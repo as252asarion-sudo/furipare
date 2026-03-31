@@ -41,13 +41,13 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-800">ダッシュボード</h1>
         <p className="text-slate-500 text-sm mt-1">ウラヤハカンパニー の業務状況</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-slate-200 p-5">
           <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
             <TrendingUp size={14} /> 今月の入金額
@@ -65,7 +65,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {cards.map(({ label, value, icon: Icon, href, color }) => (
           <Link key={href} href={href} className="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
             <div className={`${color} w-9 h-9 rounded-lg flex items-center justify-center mb-3`}>
@@ -79,7 +79,7 @@ export default function Dashboard() {
 
       <div className="mb-8">
         <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">クイックアクション</h2>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {[
             { href: '/estimates/new', label: '見積書を作成', color: 'bg-indigo-600 hover:bg-indigo-700' },
             { href: '/invoices/new', label: '請求書を作成', color: 'bg-emerald-600 hover:bg-emerald-700' },
@@ -102,8 +102,8 @@ export default function Dashboard() {
             <Link href="/invoices/new" className="text-indigo-600 text-sm mt-2 inline-block hover:underline">最初の請求書を作成する →</Link>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden overflow-x-auto">
+            <table className="w-full text-sm min-w-[500px]">
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>{['案件名', '作成日', '支払期日', 'ステータス'].map(h => <th key={h} className="text-left px-4 py-3 text-slate-600 font-medium text-xs">{h}</th>)}</tr>
               </thead>

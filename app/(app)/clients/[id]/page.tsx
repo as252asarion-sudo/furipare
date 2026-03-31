@@ -18,7 +18,7 @@ export default function EditClientPage({ params }: PageProps<'/clients/[id]'>) {
   if (!client) return <div className="p-8 text-slate-400">読み込み中...</div>
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader title="クライアント編集" backHref="/clients" />
       <ClientForm initial={client} />
     </div>

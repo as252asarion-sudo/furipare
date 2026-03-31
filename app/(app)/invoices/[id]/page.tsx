@@ -18,7 +18,7 @@ export default function EditInvoicePage({ params }: PageProps<'/invoices/[id]'>)
   if (!invoice) return <div className="p-8 text-slate-400">読み込み中...</div>
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader title="請求書 編集" backHref="/invoices" />
       <InvoiceForm initial={invoice} />
     </div>

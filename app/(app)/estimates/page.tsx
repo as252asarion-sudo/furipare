@@ -25,7 +25,7 @@ export default function EstimatesPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader
         title="見積書"
         description="クライアントへの見積もりを管理します"
