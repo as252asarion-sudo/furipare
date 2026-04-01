@@ -11,6 +11,7 @@ import {
   Settings,
   Briefcase,
   LogOut,
+  ExternalLink,
 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import type { User } from '@supabase/supabase-js'
@@ -78,6 +79,10 @@ export default function Sidebar() {
             {user.email}
           </div>
         )}
+        <Link href="/" className="flex items-center gap-1.5 text-xs text-indigo-300 hover:text-white transition-colors">
+          <ExternalLink size={13} />
+          サービス紹介ページ
+        </Link>
         <div className="flex items-center justify-between">
           <span className="text-xs text-indigo-400">v1.0.0 MVP</span>
           {user && (
