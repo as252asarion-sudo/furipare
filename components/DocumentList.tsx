@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Trash2 } from 'lucide-react'
 import { fmt, calcSubtotal, calcTax, calcTotal } from '@/lib/store'
 import type { EstimateItem } from '@/lib/types'
@@ -20,12 +21,20 @@ interface Props {
   rows: Row[]
   editBase: string
   statusMap: Record<string, { label: string; cls: string }>
-  onDelete: (id: string) => void
+  deleteAction: (id: string) => Promise<void>
   emptyLabel: string
   emptyIcon: React.ReactNode
 }
 
-export default function DocumentList({ rows, editBase, statusMap, onDelete, emptyLabel, emptyIcon }: Props) {
+export default function DocumentList({ rows, editBase, statusMap, deleteAction, emptyLabel, emptyIcon }: Props) {
+  const router = useRouter()
+
+  async function handleDelete(id: string) {
+    if (!confirm('削除しますか？')) return
+    await deleteAction(id)
+    router.refresh()
+  }
+
   if (rows.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-slate-200 p-16 text-center text-slate-400">
@@ -59,7 +68,7 @@ export default function DocumentList({ rows, editBase, statusMap, onDelete, empt
                 </td>
                 <td className="px-4 py-3 flex items-center gap-2 justify-end">
                   <Link href={`${editBase}/${row.id}`} className="text-xs text-indigo-600 hover:underline px-2 py-1 rounded border border-indigo-200 hover:bg-indigo-50">編集</Link>
-                  <button onClick={() => onDelete(row.id)} className="text-red-400 hover:text-red-600 p-1.5 rounded hover:bg-red-50">
+                  <button onClick={() => handleDelete(row.id)} className="text-red-400 hover:text-red-600 p-1.5 rounded hover:bg-red-50">
                     <Trash2 size={13} />
                   </button>
                 </td>

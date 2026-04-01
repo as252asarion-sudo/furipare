@@ -2,7 +2,10 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Trash2, Download } from 'lucide-react'
-import { saveInvoice, uid, getClients, getEstimates, getSettings, fmt, calcSubtotal, calcTax, calcWithholding, calcTotal } from '@/lib/store'
+import { saveInvoiceAction } from '@/lib/invoices'
+import { getEstimates } from '@/lib/quotes'
+import { getClients } from '@/lib/clients'
+import { getSettings, fmt, calcSubtotal, calcTax, calcWithholding, calcTotal } from '@/lib/store'
 import { generateInvoicePdf } from '@/lib/pdf'
 import type { Invoice, EstimateItem, Profession, Client, Estimate } from '@/lib/types'
 import { PROFESSIONS } from '@/lib/types'
@@ -27,8 +30,8 @@ export default function InvoiceForm({ initial }: Props) {
   const [status, setStatus] = useState<Invoice['status']>(initial?.status ?? 'unpaid')
 
   useEffect(() => {
-    setClients(getClients())
-    setEstimates(getEstimates())
+    getClients().then(setClients)
+    getEstimates().then(setEstimates)
   }, [])
 
   function importFromEstimate(estId: string) {
@@ -54,27 +57,30 @@ export default function InvoiceForm({ initial }: Props) {
   const withholding = withholdingTax ? calcWithholding(subtotal) : 0
   const total = calcTotal(subtotal, tax, withholdingTax)
 
-  function buildInvoice(): Invoice {
+  function buildData(): Omit<Invoice, 'id' | 'createdAt'> {
     return {
-      id: initial?.id ?? uid(),
       estimateId: estimateId || undefined,
       clientId, projectName, profession, items, taxRate, withholdingTax, note, dueDate, status,
-      createdAt: initial?.createdAt ?? new Date().toISOString(),
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    saveInvoice(buildInvoice())
-    router.push('/invoices')
+    const formData = new FormData()
+    formData.set('data', JSON.stringify(buildData()))
+    await saveInvoiceAction(initial?.id ?? null, formData)
   }
 
   function handlePdf() {
-    const inv = buildInvoice()
+    const data = buildData()
     const client = clients.find(c => c.id === clientId)
     if (!client) return alert('クライアントを選択してください')
     const s = getSettings()
-    saveInvoice(inv)
+    const inv: Invoice = {
+      id: initial?.id ?? 'preview',
+      createdAt: initial?.createdAt ?? new Date().toISOString(),
+      ...data,
+    }
     generateInvoicePdf(inv, client, s.myName, s.myAddress, s.myEmail, s.myBankInfo)
   }
 
@@ -146,7 +152,7 @@ export default function InvoiceForm({ initial }: Props) {
               <input type="number" min={0} value={item.quantity} onChange={e => setItem(idx, 'quantity', Number(e.target.value))}
                 className="col-span-2 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               <input value={item.unit} onChange={e => setItem(idx, 'unit', e.target.value)}
-                className="col-span-1 border border-slate-300 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                className="col-span-1 border border-slate-300 rounded-lg px2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               <input type="number" min={0} value={item.unitPrice} onChange={e => setItem(idx, 'unitPrice', Number(e.target.value))}
                 className="col-span-2 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
               <div className="col-span-1 flex items-center justify-between">

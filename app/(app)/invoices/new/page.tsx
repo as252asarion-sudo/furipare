@@ -1,30 +1,14 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { getInvoices } from '@/lib/store'
+import { redirect } from 'next/navigation'
+import { getInvoiceCount } from '@/lib/invoices'
 import PageHeader from '@/components/PageHeader'
 import InvoiceForm from '@/components/InvoiceForm'
-import InvoiceLimitModal from '@/components/InvoiceLimitModal'
 
 const FREE_PLAN_LIMIT = 3
 
-export default function NewInvoicePage() {
-  const router = useRouter()
-  const [showLimitModal, setShowLimitModal] = useState(false)
-
-  useEffect(() => {
-    if (getInvoices().length >= FREE_PLAN_LIMIT) {
-      setShowLimitModal(true)
-    }
-  }, [])
-
-  function handleModalClose() {
-    setShowLimitModal(false)
-    router.push('/invoices')
-  }
-
-  if (showLimitModal) {
-    return <InvoiceLimitModal onClose={handleModalClose} />
+export default async function NewInvoicePage() {
+  const count = await getInvoiceCount()
+  if (count >= FREE_PLAN_LIMIT) {
+    redirect('/invoices')
   }
 
   return (

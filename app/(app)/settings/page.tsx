@@ -55,9 +55,9 @@ export default function SettingsPage() {
           )}
         </div>
       </form>
-      <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4 max-w-lg">
-        <p className="text-sm text-amber-800 font-medium">データの保存について</p>
-        <p className="text-xs text-amber-700 mt-1">データはこのブラウザのローカルストレージに保存されます。ブラウザのデータを削除すると消えますのでご注意ください。</p>
+      <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4 max-w-lg">
+        <p className="text-sm text-blue-800 font-medium">PDF出力情報について</p>
+        <p className="text-xs text-blue-700 mt-1">氏名・住所・振込先などのPDF出力用情報は、このブラウザに保存されます。クライアント・請求書・見積書・契約書のデータはクラウドに安全に保存されます。</p>
       </div>
     </div>
   )

@@ -1,9 +1,6 @@
-'use client'
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Plus, FileText } from 'lucide-react'
-import { getEstimates, deleteEstimate } from '@/lib/store'
-import type { Estimate } from '@/lib/types'
+import { getEstimates, deleteEstimate } from '@/lib/quotes'
 import PageHeader from '@/components/PageHeader'
 import DocumentList from '@/components/DocumentList'
 
@@ -14,15 +11,8 @@ const STATUS_MAP = {
   rejected: { label: '却下', cls: 'bg-red-100 text-red-700' },
 }
 
-export default function EstimatesPage() {
-  const [estimates, setEstimates] = useState<Estimate[]>([])
-  useEffect(() => { setEstimates(getEstimates()) }, [])
-
-  function handleDelete(id: string) {
-    if (!confirm('削除しますか？')) return
-    deleteEstimate(id)
-    setEstimates(getEstimates())
-  }
+export default async function EstimatesPage() {
+  const estimates = await getEstimates()
 
   return (
     <div className="p-4 md:p-8">
@@ -39,7 +29,7 @@ export default function EstimatesPage() {
         rows={estimates}
         editBase="/estimates"
         statusMap={STATUS_MAP}
-        onDelete={handleDelete}
+        deleteAction={deleteEstimate}
         emptyLabel="見積書がありません"
         emptyIcon={<FileText size={40} className="mx-auto opacity-30" />}
       />

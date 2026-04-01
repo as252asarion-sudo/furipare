@@ -2,7 +2,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Trash2, Download } from 'lucide-react'
-import { saveEstimate, uid, getClients, getSettings, fmt, calcSubtotal, calcTax, calcWithholding, calcTotal } from '@/lib/store'
+import { saveEstimateAction } from '@/lib/quotes'
+import { getClients } from '@/lib/clients'
+import { getSettings, fmt, calcSubtotal, calcTax, calcWithholding, calcTotal } from '@/lib/store'
 import { TEMPLATES } from '@/lib/templates'
 import { generateEstimatePdf } from '@/lib/pdf'
 import type { Estimate, EstimateItem, Profession, Client } from '@/lib/types'
@@ -25,7 +27,7 @@ export default function EstimateForm({ initial }: Props) {
   const [validUntil, setValidUntil] = useState(initial?.validUntil ?? '')
   const [status, setStatus] = useState<Estimate['status']>(initial?.status ?? 'draft')
 
-  useEffect(() => { setClients(getClients()) }, [])
+  useEffect(() => { getClients().then(setClients) }, [])
 
   function applyTemplate(p: Profession) {
     setProfession(p)
@@ -43,26 +45,27 @@ export default function EstimateForm({ initial }: Props) {
   const withholding = withholdingTax ? calcWithholding(subtotal) : 0
   const total = calcTotal(subtotal, tax, withholdingTax)
 
-  function buildEstimate(): Estimate {
-    return {
-      id: initial?.id ?? uid(),
-      clientId, projectName, profession, items, taxRate, withholdingTax, note, validUntil, status,
-      createdAt: initial?.createdAt ?? new Date().toISOString(),
-    }
+  function buildData(): Omit<Estimate, 'id' | 'createdAt'> {
+    return { clientId, projectName, profession, items, taxRate, withholdingTax, note, validUntil, status }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    saveEstimate(buildEstimate())
-    router.push('/estimates')
+    const formData = new FormData()
+    formData.set('data', JSON.stringify(buildData()))
+    await saveEstimateAction(initial?.id ?? null, formData)
   }
 
   function handlePdf() {
-    const est = buildEstimate()
+    const data = buildData()
     const client = clients.find(c => c.id === clientId)
     if (!client) return alert('クライアントを選択してください')
     const s = getSettings()
-    saveEstimate(est)
+    const est: Estimate = {
+      id: initial?.id ?? 'preview',
+      createdAt: initial?.createdAt ?? new Date().toISOString(),
+      ...data,
+    }
     generateEstimatePdf(est, client, s.myName, s.myAddress, s.myEmail)
   }
 

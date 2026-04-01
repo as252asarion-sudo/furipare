@@ -1,43 +1,42 @@
-'use client'
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { FileText, Receipt, ScrollText, Users, TrendingUp, AlertCircle, Plus } from 'lucide-react'
-import { getEstimates, getInvoices, getContracts, getClients, fmt, calcSubtotal, calcTax, calcTotal } from '@/lib/store'
+import { getEstimates } from '@/lib/quotes'
+import { getInvoices } from '@/lib/invoices'
+import { getContracts } from '@/lib/contracts'
+import { getClients } from '@/lib/clients'
+import { fmt, calcSubtotal, calcTax, calcTotal } from '@/lib/store'
 import type { Invoice } from '@/lib/types'
 
-export default function Dashboard() {
-  const [stats, setStats] = useState({
-    clients: 0, estimates: 0, invoices: 0, contracts: 0,
-    unpaidAmount: 0, overdueCount: 0, monthIncome: 0,
-  })
-  const [recentInvoices, setRecentInvoices] = useState<Invoice[]>([])
+export default async function Dashboard() {
+  const [clients, estimates, invoices, contracts] = await Promise.all([
+    getClients(),
+    getEstimates(),
+    getInvoices(),
+    getContracts(),
+  ])
 
-  useEffect(() => {
-    const clients = getClients()
-    const estimates = getEstimates()
-    const invoices = getInvoices()
-    const contracts = getContracts()
-    const now = new Date()
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
-    let unpaidAmount = 0, overdueCount = 0, monthIncome = 0
-    invoices.forEach(inv => {
-      const sub = calcSubtotal(inv.items)
-      const total = calcTotal(sub, calcTax(sub, inv.taxRate), inv.withholdingTax)
-      if (inv.status === 'unpaid') {
-        unpaidAmount += total
-        if (inv.dueDate < now.toISOString().slice(0, 10)) overdueCount++
-      }
-      if (inv.status === 'paid' && inv.createdAt >= monthStart) monthIncome += total
-    })
-    setStats({ clients: clients.length, estimates: estimates.length, invoices: invoices.length, contracts: contracts.length, unpaidAmount, overdueCount, monthIncome })
-    setRecentInvoices(invoices.slice(0, 5))
-  }, [])
+  const now = new Date()
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+  const today = now.toISOString().slice(0, 10)
+
+  let unpaidAmount = 0, overdueCount = 0, monthIncome = 0
+  invoices.forEach(inv => {
+    const sub = calcSubtotal(inv.items)
+    const total = calcTotal(sub, calcTax(sub, inv.taxRate), inv.withholdingTax)
+    if (inv.status === 'unpaid') {
+      unpaidAmount += total
+      if (inv.dueDate < today) overdueCount++
+    }
+    if (inv.status === 'paid' && inv.createdAt >= monthStart) monthIncome += total
+  })
+
+  const recentInvoices = invoices.slice(0, 5)
 
   const cards = [
-    { label: 'クライアント', value: stats.clients, icon: Users, href: '/clients', color: 'bg-blue-500' },
-    { label: '見積書', value: stats.estimates, icon: FileText, href: '/estimates', color: 'bg-violet-500' },
-    { label: '請求書', value: stats.invoices, icon: Receipt, href: '/invoices', color: 'bg-emerald-500' },
-    { label: '契約書', value: stats.contracts, icon: ScrollText, href: '/contracts', color: 'bg-orange-500' },
+    { label: 'クライアント', value: clients.length, icon: Users, href: '/clients', color: 'bg-blue-500' },
+    { label: '見積書', value: estimates.length, icon: FileText, href: '/estimates', color: 'bg-violet-500' },
+    { label: '請求書', value: invoices.length, icon: Receipt, href: '/invoices', color: 'bg-emerald-500' },
+    { label: '契約書', value: contracts.length, icon: ScrollText, href: '/contracts', color: 'bg-orange-500' },
   ]
 
   return (
@@ -52,15 +51,15 @@ export default function Dashboard() {
           <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
             <TrendingUp size={14} /> 今月の入金額
           </div>
-          <p className="text-3xl font-bold text-slate-800">¥{fmt(stats.monthIncome)}</p>
+          <p className="text-3xl font-bold text-slate-800">¥{fmt(monthIncome)}</p>
         </div>
-        <div className={`rounded-xl border p-5 ${stats.overdueCount > 0 ? 'bg-red-50 border-red-200' : 'bg-white border-slate-200'}`}>
+        <div className={`rounded-xl border p-5 ${overdueCount > 0 ? 'bg-red-50 border-red-200' : 'bg-white border-slate-200'}`}>
           <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
-            <AlertCircle size={14} className={stats.overdueCount > 0 ? 'text-red-500' : ''} />
-            入金待ち（期日超過 {stats.overdueCount}件）
+            <AlertCircle size={14} className={overdueCount > 0 ? 'text-red-500' : ''} />
+            入金待ち（期日超過 {overdueCount}件）
           </div>
-          <p className={`text-3xl font-bold ${stats.overdueCount > 0 ? 'text-red-600' : 'text-slate-800'}`}>
-            ¥{fmt(stats.unpaidAmount)}
+          <p className={`text-3xl font-bold ${overdueCount > 0 ? 'text-red-600' : 'text-slate-800'}`}>
+            ¥{fmt(unpaidAmount)}
           </p>
         </div>
       </div>

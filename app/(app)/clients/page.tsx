@@ -1,21 +1,11 @@
-'use client'
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, Trash2, User } from 'lucide-react'
-import { getClients, deleteClient } from '@/lib/store'
-import type { Client } from '@/lib/types'
+import { Plus, User } from 'lucide-react'
+import { getClients, deleteClient } from '@/lib/clients'
 import PageHeader from '@/components/PageHeader'
+import DeleteButton from '@/components/DeleteButton'
 
-export default function ClientsPage() {
-  const [clients, setClients] = useState<Client[]>([])
-
-  useEffect(() => { setClients(getClients()) }, [])
-
-  function handleDelete(id: string) {
-    if (!confirm('このクライアントを削除しますか？')) return
-    deleteClient(id)
-    setClients(getClients())
-  }
+export default async function ClientsPage() {
+  const clients = await getClients()
 
   return (
     <div className="p-4 md:p-8">
@@ -50,9 +40,7 @@ export default function ClientsPage() {
               </div>
               <div className="flex gap-2">
                 <Link href={`/clients/${c.id}`} className="text-xs text-indigo-600 hover:underline px-2 py-1 rounded border border-indigo-200 hover:bg-indigo-50">編集</Link>
-                <button onClick={() => handleDelete(c.id)} className="text-red-400 hover:text-red-600 p-1.5 rounded hover:bg-red-50">
-                  <Trash2 size={14} />
-                </button>
+                <DeleteButton id={c.id} action={deleteClient} confirm="このクライアントを削除しますか？" />
               </div>
             </div>
           ))}

@@ -2,7 +2,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Download, Plus, Trash2 } from 'lucide-react'
-import { saveContract, uid, getClients, getSettings } from '@/lib/store'
+import { saveContractAction } from '@/lib/contracts'
+import { getClients } from '@/lib/clients'
+import { getSettings } from '@/lib/store'
 import { TEMPLATES } from '@/lib/templates'
 import { generateContractPdf } from '@/lib/pdf'
 import type { Contract, Profession, Client } from '@/lib/types'
@@ -28,7 +30,7 @@ export default function ContractForm({ initial }: Props) {
     initial ? TEMPLATES[initial.profession].contractClauses.map(c => c) : TEMPLATES['designer'].contractClauses.map(c => c)
   )
 
-  useEffect(() => { setClients(getClients()) }, [])
+  useEffect(() => { getClients().then(setClients) }, [])
 
   function applyTemplate(p: Profession) {
     setProfession(p)
@@ -42,27 +44,30 @@ export default function ContractForm({ initial }: Props) {
   function addClause() { setClauses(prev => [...prev, '']) }
   function removeClause(idx: number) { setClauses(prev => prev.filter((_, i) => i !== idx)) }
 
-  function buildContract(): Contract {
+  function buildData(): Omit<Contract, 'id' | 'createdAt'> {
     return {
-      id: initial?.id ?? uid(),
       clientId, projectName, profession, startDate, endDate, amount,
       revisionCount, copyrightOwner, portfolioAllowed, note, status,
-      createdAt: initial?.createdAt ?? new Date().toISOString(),
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    saveContract(buildContract())
-    router.push('/contracts')
+    const formData = new FormData()
+    formData.set('data', JSON.stringify(buildData()))
+    await saveContractAction(initial?.id ?? null, formData)
   }
 
   function handlePdf() {
-    const con = buildContract()
+    const data = buildData()
     const client = clients.find(c => c.id === clientId)
     if (!client) return alert('クライアントを選択してください')
     const s = getSettings()
-    saveContract(con)
+    const con: Contract = {
+      id: initial?.id ?? 'preview',
+      createdAt: initial?.createdAt ?? new Date().toISOString(),
+      ...data,
+    }
     generateContractPdf(con, client, s.myName, s.myAddress, s.myEmail, clauses)
   }
 

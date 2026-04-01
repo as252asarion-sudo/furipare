@@ -1,10 +1,9 @@
-'use client'
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Plus, ScrollText, Trash2 } from 'lucide-react'
-import { getContracts, getClients, deleteContract } from '@/lib/store'
-import type { Contract, Client } from '@/lib/types'
+import { getContracts, deleteContract } from '@/lib/contracts'
+import { getClients } from '@/lib/clients'
 import PageHeader from '@/components/PageHeader'
+import ContractsDeleteButton from '@/components/ContractsDeleteButton'
 
 const STATUS_MAP: Record<string, { label: string; cls: string }> = {
   draft: { label: '下書き', cls: 'bg-slate-100 text-slate-600' },
@@ -12,22 +11,9 @@ const STATUS_MAP: Record<string, { label: string; cls: string }> = {
   signed: { label: '締結済み', cls: 'bg-green-100 text-green-700' },
 }
 
-export default function ContractsPage() {
-  const [contracts, setContracts] = useState<Contract[]>([])
-  const [clientMap, setClientMap] = useState<Record<string, Client>>({})
-
-  useEffect(() => {
-    setContracts(getContracts())
-    const map: Record<string, Client> = {}
-    getClients().forEach(c => { map[c.id] = c })
-    setClientMap(map)
-  }, [])
-
-  function handleDelete(id: string) {
-    if (!confirm('削除しますか？')) return
-    deleteContract(id)
-    setContracts(getContracts())
-  }
+export default async function ContractsPage() {
+  const [contracts, clients] = await Promise.all([getContracts(), getClients()])
+  const clientMap = Object.fromEntries(clients.map(c => [c.id, c]))
 
   return (
     <div className="p-4 md:p-8">
@@ -66,7 +52,7 @@ export default function ContractsPage() {
                     <td className="px-4 py-3"><span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${cls}`}>{label}</span></td>
                     <td className="px-4 py-3 flex items-center gap-2 justify-end">
                       <Link href={`/contracts/${con.id}`} className="text-xs text-indigo-600 hover:underline px-2 py-1 rounded border border-indigo-200 hover:bg-indigo-50">編集</Link>
-                      <button onClick={() => handleDelete(con.id)} className="text-red-400 hover:text-red-600 p-1.5 rounded hover:bg-red-50"><Trash2 size={13} /></button>
+                      <ContractsDeleteButton id={con.id} action={deleteContract} />
                     </td>
                   </tr>
                 )

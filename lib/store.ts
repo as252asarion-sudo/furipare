@@ -1,109 +1,35 @@
 'use client'
-import { AppData, Client, Estimate, Invoice, Contract } from './types'
 
-const KEY = 'furipare_data'
+const SETTINGS_KEY = 'furipare_settings'
 
-function defaultData(): AppData {
-  return {
-    clients: [],
-    estimates: [],
-    invoices: [],
-    contracts: [],
-    myName: '',
-    myAddress: '',
-    myEmail: '',
-    myBankInfo: '',
-  }
-}
-
-export function loadData(): AppData {
-  if (typeof window === 'undefined') return defaultData()
+// Settings (PDF出力用の自分情報のみlocalStorageで管理)
+export function getSettings(): { myName: string; myAddress: string; myEmail: string; myBankInfo: string } {
+  if (typeof window === 'undefined') return { myName: '', myAddress: '', myEmail: '', myBankInfo: '' }
   try {
-    const raw = localStorage.getItem(KEY)
-    if (!raw) return defaultData()
-    return { ...defaultData(), ...JSON.parse(raw) }
+    const raw = localStorage.getItem(SETTINGS_KEY)
+    if (!raw) {
+      // 旧フォーマット(furipare_data)からの移行サポート
+      const legacy = localStorage.getItem('furipare_data')
+      if (legacy) {
+        const d = JSON.parse(legacy)
+        return {
+          myName: d.myName ?? '',
+          myAddress: d.myAddress ?? '',
+          myEmail: d.myEmail ?? '',
+          myBankInfo: d.myBankInfo ?? '',
+        }
+      }
+      return { myName: '', myAddress: '', myEmail: '', myBankInfo: '' }
+    }
+    return JSON.parse(raw)
   } catch {
-    return defaultData()
+    return { myName: '', myAddress: '', myEmail: '', myBankInfo: '' }
   }
 }
 
-export function saveData(data: AppData): void {
-  if (typeof window === 'undefined') return
-  localStorage.setItem(KEY, JSON.stringify(data))
-}
-
-export function uid(): string {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2)
-}
-
-// Client CRUD
-export function getClients(): Client[] { return loadData().clients }
-export function saveClient(client: Client): void {
-  const d = loadData()
-  const idx = d.clients.findIndex(c => c.id === client.id)
-  if (idx >= 0) d.clients[idx] = client
-  else d.clients.unshift(client)
-  saveData(d)
-}
-export function deleteClient(id: string): void {
-  const d = loadData()
-  d.clients = d.clients.filter(c => c.id !== id)
-  saveData(d)
-}
-
-// Estimate CRUD
-export function getEstimates(): Estimate[] { return loadData().estimates }
-export function saveEstimate(est: Estimate): void {
-  const d = loadData()
-  const idx = d.estimates.findIndex(e => e.id === est.id)
-  if (idx >= 0) d.estimates[idx] = est
-  else d.estimates.unshift(est)
-  saveData(d)
-}
-export function deleteEstimate(id: string): void {
-  const d = loadData()
-  d.estimates = d.estimates.filter(e => e.id !== id)
-  saveData(d)
-}
-
-// Invoice CRUD
-export function getInvoices(): Invoice[] { return loadData().invoices }
-export function saveInvoice(inv: Invoice): void {
-  const d = loadData()
-  const idx = d.invoices.findIndex(i => i.id === inv.id)
-  if (idx >= 0) d.invoices[idx] = inv
-  else d.invoices.unshift(inv)
-  saveData(d)
-}
-export function deleteInvoice(id: string): void {
-  const d = loadData()
-  d.invoices = d.invoices.filter(i => i.id !== id)
-  saveData(d)
-}
-
-// Contract CRUD
-export function getContracts(): Contract[] { return loadData().contracts }
-export function saveContract(con: Contract): void {
-  const d = loadData()
-  const idx = d.contracts.findIndex(c => c.id === con.id)
-  if (idx >= 0) d.contracts[idx] = con
-  else d.contracts.unshift(con)
-  saveData(d)
-}
-export function deleteContract(id: string): void {
-  const d = loadData()
-  d.contracts = d.contracts.filter(c => c.id !== id)
-  saveData(d)
-}
-
-export function getSettings() {
-  const d = loadData()
-  return { myName: d.myName, myAddress: d.myAddress, myEmail: d.myEmail, myBankInfo: d.myBankInfo }
-}
 export function saveSettings(s: { myName: string; myAddress: string; myEmail: string; myBankInfo: string }) {
-  const d = loadData()
-  Object.assign(d, s)
-  saveData(d)
+  if (typeof window === 'undefined') return
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s))
 }
 
 // Calc helpers

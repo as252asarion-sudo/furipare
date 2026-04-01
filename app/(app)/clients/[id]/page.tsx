@@ -1,21 +1,13 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { getClients } from '@/lib/store'
-import type { Client } from '@/lib/types'
+import { notFound } from 'next/navigation'
+import { getClient } from '@/lib/clients'
 import PageHeader from '@/components/PageHeader'
 import ClientForm from '@/components/ClientForm'
 
-export default function EditClientPage({ params }: PageProps<'/clients/[id]'>) {
-  const [client, setClient] = useState<Client | null>(null)
+export default async function EditClientPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const client = await getClient(id)
 
-  useEffect(() => {
-    params.then(({ id }) => {
-      const c = getClients().find(x => x.id === id)
-      setClient(c ?? null)
-    })
-  }, [params])
-
-  if (!client) return <div className="p-8 text-slate-400">読み込み中...</div>
+  if (!client) notFound()
 
   return (
     <div className="p-4 md:p-8">

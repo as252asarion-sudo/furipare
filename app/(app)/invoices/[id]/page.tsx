@@ -1,21 +1,13 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { getInvoices } from '@/lib/store'
-import type { Invoice } from '@/lib/types'
+import { notFound } from 'next/navigation'
+import { getInvoice } from '@/lib/invoices'
 import PageHeader from '@/components/PageHeader'
 import InvoiceForm from '@/components/InvoiceForm'
 
-export default function EditInvoicePage({ params }: PageProps<'/invoices/[id]'>) {
-  const [invoice, setInvoice] = useState<Invoice | null>(null)
+export default async function EditInvoicePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const invoice = await getInvoice(id)
 
-  useEffect(() => {
-    params.then(({ id }) => {
-      const inv = getInvoices().find(x => x.id === id)
-      setInvoice(inv ?? null)
-    })
-  }, [params])
-
-  if (!invoice) return <div className="p-8 text-slate-400">読み込み中...</div>
+  if (!invoice) notFound()
 
   return (
     <div className="p-4 md:p-8">
