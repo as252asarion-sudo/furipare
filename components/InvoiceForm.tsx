@@ -28,6 +28,8 @@ export default function InvoiceForm({ initial }: Props) {
   const [note, setNote] = useState(initial?.note ?? '')
   const [dueDate, setDueDate] = useState(initial?.dueDate ?? '')
   const [status, setStatus] = useState<Invoice['status']>(initial?.status ?? 'unpaid')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     getClients().then(setClients)
@@ -66,12 +68,23 @@ export default function InvoiceForm({ initial }: Props) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const formData = new FormData()
-    formData.set('data', JSON.stringify(buildData()))
-    await saveInvoiceAction(initial?.id ?? null, formData)
+    setSaving(true)
+    setError(null)
+    try {
+      const formData = new FormData()
+      formData.set('data', JSON.stringify(buildData()))
+      await saveInvoiceAction(initial?.id ?? null, formData)
+    } catch (err: unknown) {
+      // redirect()はエラーとしてthrowされるが正常な遷移なので無視
+      const msg = err instanceof Error ? err.message : String(err)
+      if (!msg.includes('NEXT_REDIRECT')) {
+        setError(msg)
+        setSaving(false)
+      }
+    }
   }
 
-  function handlePdf() {
+  async function handlePdf() {
     const data = buildData()
     const client = clients.find(c => c.id === clientId)
     if (!client) return alert('クライアントを選択してください')
@@ -199,9 +212,10 @@ export default function InvoiceForm({ initial }: Props) {
           className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="振込先銀行、注意事項など" />
       </div>
 
+      {error && <div className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-2">{error}</div>}
       <div className="flex flex-wrap gap-3">
-        <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors">
-          {initial ? '更新する' : '保存する'}
+        <button type="submit" disabled={saving} className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors">
+          {saving ? '保存中...' : (initial ? '更新する' : '保存する')}
         </button>
         <button type="button" onClick={handlePdf} className="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-sm font-medium px-5 py-2 rounded-lg transition-colors">
           <Download size={14} /> PDF出力

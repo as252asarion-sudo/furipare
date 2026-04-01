@@ -58,7 +58,7 @@ export default function ContractForm({ initial }: Props) {
     await saveContractAction(initial?.id ?? null, formData)
   }
 
-  function handlePdf() {
+  async function handlePdf() {
     const data = buildData()
     const client = clients.find(c => c.id === clientId)
     if (!client) return alert('クライアントを選択してください')

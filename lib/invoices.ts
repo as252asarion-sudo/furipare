@@ -2,7 +2,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { calcSubtotal, calcTax, calcTotal } from './store'
+import { calcSubtotal, calcTax, calcTotal } from './calc'
 import type { Invoice } from './types'
 
 function rowToInvoice(row: Record<string, unknown>): Invoice {

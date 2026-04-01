@@ -4,7 +4,7 @@ import { getEstimates } from '@/lib/quotes'
 import { getInvoices } from '@/lib/invoices'
 import { getContracts } from '@/lib/contracts'
 import { getClients } from '@/lib/clients'
-import { fmt, calcSubtotal, calcTax, calcTotal } from '@/lib/store'
+import { fmt, calcSubtotal, calcTax, calcTotal } from '@/lib/calc'
 import type { Invoice } from '@/lib/types'
 
 export default async function Dashboard() {
