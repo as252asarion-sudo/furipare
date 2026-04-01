@@ -11,7 +11,6 @@ import {
   Settings,
   Briefcase,
   LogOut,
-  ExternalLink,
 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import type { User } from '@supabase/supabase-js'
@@ -47,13 +46,13 @@ export default function Sidebar() {
 
   return (
     <aside className="w-56 bg-indigo-700 text-white flex flex-col min-h-full shrink-0">
-      <div className="px-5 py-5 border-b border-indigo-600">
+      <Link href="/" className="px-5 py-5 border-b border-indigo-600 block hover:bg-indigo-600 transition-colors">
         <div className="flex items-center gap-2">
           <Briefcase size={20} className="text-indigo-200" />
           <span className="font-bold text-lg tracking-tight">フリパレ</span>
         </div>
         <p className="text-indigo-300 text-xs mt-0.5">ウラヤハカンパニー</p>
-      </div>
+      </Link>
       <nav className="flex-1 px-3 py-4 space-y-1">
         {nav.map(({ href, label, icon: Icon }) => {
           const active = pathname === href
@@ -79,10 +78,6 @@ export default function Sidebar() {
             {user.email}
           </div>
         )}
-        <Link href="/" className="flex items-center gap-1.5 text-xs text-indigo-300 hover:text-white transition-colors">
-          <ExternalLink size={13} />
-          サービス紹介ページ
-        </Link>
         <div className="flex items-center justify-between">
           <span className="text-xs text-indigo-400">v1.0.0 MVP</span>
           {user && (
