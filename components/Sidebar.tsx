@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import {
   LayoutDashboard,
   Users,
@@ -9,7 +10,10 @@ import {
   ScrollText,
   Settings,
   Briefcase,
+  LogOut,
 } from 'lucide-react'
+import { createClient } from '@/utils/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
 const nav = [
   { href: '/dashboard', label: 'ダッシュボード', icon: LayoutDashboard },
@@ -22,6 +26,24 @@ const nav = [
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  async function handleSignOut() {
+    await fetch('/auth/signout', { method: 'POST' })
+    router.push('/auth/login')
+  }
+
   return (
     <aside className="w-56 bg-indigo-700 text-white flex flex-col min-h-full shrink-0">
       <div className="px-5 py-5 border-b border-indigo-600">
@@ -50,8 +72,25 @@ export default function Sidebar() {
           )
         })}
       </nav>
-      <div className="px-5 py-4 border-t border-indigo-600 text-xs text-indigo-400">
-        v1.0.0 MVP
+      <div className="px-4 py-4 border-t border-indigo-600 space-y-2">
+        {user && (
+          <div className="text-xs text-indigo-300 truncate px-1" title={user.email ?? ''}>
+            {user.email}
+          </div>
+        )}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-indigo-400">v1.0.0 MVP</span>
+          {user && (
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-1.5 text-xs text-indigo-300 hover:text-white transition-colors"
+              title="ログアウト"
+            >
+              <LogOut size={13} />
+              ログアウト
+            </button>
+          )}
+        </div>
       </div>
     </aside>
   )
