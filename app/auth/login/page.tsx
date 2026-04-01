@@ -10,9 +10,8 @@ export default function LoginPage() {
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const supabase = createClient()
-
   async function handleGoogleSignIn() {
+    const supabase = createClient()
     setLoading(true)
     setError(null)
     const { error } = await supabase.auth.signInWithOAuth({
@@ -33,6 +32,7 @@ export default function LoginPage() {
     setLoading(true)
     setError(null)
     setMessage(null)
+    const supabase = createClient()
 
     const { error } = await supabase.auth.signInWithOtp({
       email,
