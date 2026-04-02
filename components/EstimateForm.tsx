@@ -187,13 +187,13 @@ export default function EstimateForm({ initial }: Props) {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors">
+        <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors cursor-pointer">
           {initial ? '更新する' : '保存する'}
         </button>
-        <button type="button" onClick={handlePdf} className="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-sm font-medium px-5 py-2 rounded-lg transition-colors">
+        <button type="button" onClick={handlePdf} className="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-sm font-medium px-5 py-2 rounded-lg transition-colors cursor-pointer">
           <Download size={14} /> PDF出力
         </button>
-        <button type="button" onClick={() => router.push('/estimates')} className="text-sm text-slate-500 hover:text-slate-800 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50">
+        <button type="button" onClick={() => router.push('/estimates')} className="text-sm text-slate-500 hover:text-slate-800 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
           キャンセル
         </button>
       </div>
