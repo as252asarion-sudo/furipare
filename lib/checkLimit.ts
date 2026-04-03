@@ -30,10 +30,10 @@ export async function checkLimit(resource: ResourceType): Promise<LimitCheckResu
     .eq('id', user.id)
     .single()
 
-  const plan: PlanType = (profile?.plan === 'pro') ? 'pro' : 'free'
+  const plan: PlanType = (profile?.plan === 'advance') ? 'advance' : 'free'
   const limit = PLAN_LIMITS[plan][resource]
 
-  // プロプランは無制限
+  // アドバンスプランは無制限
   if (limit === Infinity) return { ok: true }
 
   // 当月作成数をカウント（created_at >= 今月1日 00:00:00 UTC）
@@ -76,7 +76,7 @@ export async function getUsageSummary(): Promise<UsageSummary | null> {
     .eq('id', user.id)
     .single()
 
-  const plan: PlanType = (profile?.plan === 'pro') ? 'pro' : 'free'
+  const plan: PlanType = (profile?.plan === 'advance') ? 'advance' : 'free'
 
   const now = new Date()
   const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString()

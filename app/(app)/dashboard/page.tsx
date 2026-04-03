@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { FileText, Receipt, ScrollText, Users, TrendingUp, AlertCircle, Plus } from 'lucide-react'
 import { getEstimates } from '@/lib/quotes'
@@ -7,6 +8,7 @@ import { getClients } from '@/lib/clients'
 import { fmt, calcSubtotal, calcTax, calcTotal } from '@/lib/calc'
 import { getUsageSummary } from '@/lib/checkLimit'
 import type { Invoice } from '@/lib/types'
+import UpgradedToast from '@/components/UpgradedToast'
 
 export default async function Dashboard() {
   const [clients, estimates, invoices, contracts, usage] = await Promise.all([
@@ -42,6 +44,10 @@ export default async function Dashboard() {
   ]
 
   return (
+    <>
+    <Suspense fallback={null}>
+      <UpgradedToast />
+    </Suspense>
     <div className="p-4 md:p-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-800">ダッシュボード</h1>
@@ -156,6 +162,7 @@ export default async function Dashboard() {
         )}
       </div>
     </div>
+    </>
   )
 }
 
