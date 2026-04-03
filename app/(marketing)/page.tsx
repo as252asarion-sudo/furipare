@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { FileText, Receipt, ScrollText, CheckCircle, Briefcase } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'フリパレ | フリーランスの書類管理を無料で',
-  description: 'フリーランス・副業ワーカー向けの書類管理ツール。見積書・請求書・契約書を一括管理。源泉徴収対応・完全無料。',
+  title: 'フリパレ | フリーランスの書類管理をシンプルに',
+  description: 'フリーランス・副業ワーカー向けの書類管理ツール。見積書・請求書・契約書を一括管理。源泉徴収対応。無料プランあり。',
 }
 
 export default function LandingPage() {
@@ -16,11 +16,10 @@ export default function LandingPage() {
     operatingSystem: 'Web',
     description: 'フリーランス・副業ワーカーのための見積書・請求書・契約書SaaS',
     url: 'https://furipare.com',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'JPY',
-    },
+    offers: [
+      { '@type': 'Offer', price: '0', priceCurrency: 'JPY', name: '無料プラン' },
+      { '@type': 'Offer', price: '1980', priceCurrency: 'JPY', name: 'アドバンスプラン' },
+    ],
   }
 
   return (
@@ -43,7 +42,7 @@ export default function LandingPage() {
             href="/dashboard"
             className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors"
           >
-            無料で使う
+            無料ではじめる
           </Link>
         </div>
       </header>
@@ -57,20 +56,20 @@ export default function LandingPage() {
           フリーランスの書類管理を、<br className="hidden md:block" />もっとシンプルに。
         </h1>
         <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-10">
-          見積書・請求書・契約書を一括管理。フリーランス 書類管理のベストプラクティスを、ブラウザひとつで完結。源泉徴収対応・完全無料でご利用いただけます。
+          見積書・請求書・契約書を一括管理。フリーランスに必要な書類業務を、ブラウザひとつで完結。無料プランから始められます。
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/dashboard"
             className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors shadow-lg shadow-indigo-200"
           >
-            無料で使う
+            無料ではじめる
           </Link>
           <a
-            href="#features"
+            href="#pricing"
             className="border border-slate-200 hover:border-indigo-300 text-slate-700 font-semibold px-8 py-4 rounded-xl text-lg transition-colors"
           >
-            機能を見る
+            料金を見る
           </a>
         </div>
       </section>
@@ -127,10 +126,10 @@ export default function LandingPage() {
           </p>
           <div className="grid md:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {[
-              { title: '完全無料', desc: '登録不要・クレジットカード不要。すべての機能を無料でご利用いただけます。' },
+              { title: '無料プランあり', desc: 'クレジットカード不要で無料プランからスタート。仕事が増えてきたらアドバンスプランへ。' },
               { title: '源泉徴収対応', desc: 'フリーランスの請求書に必要な源泉徴収税額を自動計算。正確な金額で請求できます。' },
               { title: 'PDF出力', desc: '見積書・請求書・契約書をすぐにPDFとして出力。クライアントへの送付がスムーズです。' },
-              { title: 'ブラウザだけで完結', desc: 'インストール不要。ブラウザさえあればどこでも使えます。データはローカルに保存されます。' },
+              { title: 'ブラウザだけで完結', desc: 'インストール不要。ブラウザさえあればどこでも使えます。' },
             ].map(({ title, desc }) => (
               <div key={title} className="flex gap-4 bg-slate-50 rounded-xl p-6 border border-slate-100">
                 <CheckCircle size={20} className="text-indigo-500 shrink-0 mt-0.5" />
@@ -144,20 +143,73 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Pricing */}
+      <section id="pricing" className="bg-slate-50 py-20">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-3xl font-bold text-slate-900 text-center mb-4">
+            シンプルな2プラン
+          </h2>
+          <p className="text-slate-500 text-center mb-14 max-w-xl mx-auto">
+            まず無料ではじめて、必要になったらアップグレード。縛りなし、面倒なし。
+          </p>
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {/* Free Plan */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-8">
+              <h3 className="text-lg font-bold text-slate-800 mb-1">無料プラン</h3>
+              <div className="text-3xl font-bold text-slate-900 mb-6">
+                ¥0 <span className="text-base font-normal text-slate-400">/ 月</span>
+              </div>
+              <ul className="space-y-3 text-sm text-slate-600 mb-8">
+                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-indigo-400" />請求書 3件／月</li>
+                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-indigo-400" />見積書 3件／月</li>
+                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-indigo-400" />契約書 1件／月</li>
+                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-indigo-400" />取引先 3社まで</li>
+              </ul>
+              <Link
+                href="/dashboard"
+                className="block text-center border border-indigo-300 hover:bg-indigo-50 text-indigo-700 font-semibold px-6 py-3 rounded-xl transition-colors"
+              >
+                無料ではじめる
+              </Link>
+            </div>
+            {/* Advance Plan */}
+            <div className="bg-indigo-600 rounded-2xl p-8 relative">
+              <span className="absolute top-4 right-4 bg-white text-indigo-600 text-xs font-bold px-3 py-1 rounded-full">おすすめ</span>
+              <h3 className="text-lg font-bold text-white mb-1">アドバンス</h3>
+              <div className="text-3xl font-bold text-white mb-6">
+                ¥1,980 <span className="text-base font-normal text-indigo-200">/ 月</span>
+              </div>
+              <ul className="space-y-3 text-sm text-indigo-100 mb-8">
+                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-indigo-300" />請求書・見積書・契約書、すべて無制限</li>
+                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-indigo-300" />取引先、何社でも</li>
+                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-indigo-300" />1件の仕事で元が取れる金額</li>
+              </ul>
+              <Link
+                href="/dashboard"
+                className="block text-center bg-white hover:bg-slate-50 text-indigo-700 font-semibold px-6 py-3 rounded-xl transition-colors"
+              >
+                アドバンスにアップグレード
+              </Link>
+            </div>
+          </div>
+          <p className="text-center text-sm text-slate-400 mt-6">クレジットカード不要で無料プランをはじめられます。アドバンスプランはいつでもキャンセル可能。</p>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="bg-indigo-600 py-20">
         <div className="max-w-5xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            今すぐ無料で始める
+            まず無料ではじめる
           </h2>
           <p className="text-indigo-200 mb-10 max-w-xl mx-auto">
-            登録不要。ブラウザを開いてすぐ使える、フリーランスのための書類管理ツールです。
+            ブラウザを開いてすぐ使える、フリーランスのための書類管理ツールです。
           </p>
           <Link
             href="/dashboard"
             className="bg-white hover:bg-slate-50 text-indigo-700 font-bold px-10 py-4 rounded-xl text-lg inline-block transition-colors shadow-lg"
           >
-            フリパレを無料で使う
+            無料ではじめる
           </Link>
         </div>
       </section>
