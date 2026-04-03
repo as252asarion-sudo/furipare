@@ -62,7 +62,7 @@ export async function POST(_request: NextRequest) {
         .eq('id', user.id)
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.furipare.com'
+    const siteUrl = 'https://www.furipare.com'
     const session = await stripePost('/checkout/sessions', {
       customer: customerId,
       mode: 'subscription',
