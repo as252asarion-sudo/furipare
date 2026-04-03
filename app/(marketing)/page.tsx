@@ -169,7 +169,10 @@ export default function LandingPage() {
             <Briefcase size={16} className="text-indigo-400" />
             <span className="font-semibold text-indigo-500">フリパレ</span>
           </div>
-          <p>&copy; 2025 ウラヤハカンパニー</p>
+          <div className="flex items-center gap-4">
+            <Link href="/legal/tokusho" className="hover:text-slate-600 transition-colors">特定商取引法に基づく表記</Link>
+            <p>&copy; 2025 ウラヤハカンパニー</p>
+          </div>
         </div>
       </footer>
     </div>
