@@ -5,14 +5,16 @@ import { getInvoices } from '@/lib/invoices'
 import { getContracts } from '@/lib/contracts'
 import { getClients } from '@/lib/clients'
 import { fmt, calcSubtotal, calcTax, calcTotal } from '@/lib/calc'
+import { getUsageSummary } from '@/lib/checkLimit'
 import type { Invoice } from '@/lib/types'
 
 export default async function Dashboard() {
-  const [clients, estimates, invoices, contracts] = await Promise.all([
+  const [clients, estimates, invoices, contracts, usage] = await Promise.all([
     getClients(),
     getEstimates(),
     getInvoices(),
     getContracts(),
+    getUsageSummary(),
   ])
 
   const now = new Date()
@@ -75,6 +77,39 @@ export default async function Dashboard() {
           </Link>
         ))}
       </div>
+
+      {usage && usage.plan === 'free' && (
+        <div className="mb-8">
+          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">今月の使用状況（無料プラン）</h2>
+          <div className="bg-white rounded-xl border border-slate-200 p-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { label: '請求書', data: usage.invoices, unit: '枚' },
+              { label: '見積書', data: usage.quotes, unit: '枚' },
+              { label: '契約書', data: usage.contracts, unit: '件' },
+              { label: 'クライアント', data: usage.clients, unit: '件' },
+            ].map(({ label, data, unit }) => {
+              const pct = Math.min((data.current / data.limit) * 100, 100)
+              const isAtLimit = data.current >= data.limit
+              return (
+                <div key={label}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-slate-500">{label}</span>
+                    <span className={`text-xs font-semibold ${isAtLimit ? 'text-red-600' : 'text-slate-700'}`}>
+                      {data.current}/{data.limit}{unit}
+                    </span>
+                  </div>
+                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all ${isAtLimit ? 'bg-red-500' : 'bg-indigo-500'}`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="mb-8">
         <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">クイックアクション</h2>

@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
-import InvoiceLimitModal from './InvoiceLimitModal'
+import UpgradeModal from './UpgradeModal'
 
 const FREE_PLAN_LIMIT = 3
 
@@ -27,7 +27,7 @@ export default function InvoicesNewButton({ count }: Props) {
       >
         <Plus size={14} /> 新規作成
       </Link>
-      {showLimitModal && <InvoiceLimitModal onClose={() => setShowLimitModal(false)} />}
+      {showLimitModal && <UpgradeModal resource="invoices" limit={FREE_PLAN_LIMIT} onClose={() => setShowLimitModal(false)} />}
     </>
   )
 }

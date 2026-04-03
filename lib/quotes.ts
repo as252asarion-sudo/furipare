@@ -2,6 +2,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { checkLimit } from './checkLimit'
 import type { Estimate } from './types'
 
 function rowToEstimate(row: Record<string, unknown>): Estimate {
@@ -76,6 +77,9 @@ export async function saveEstimateAction(id: string | null, formData: FormData) 
 
     if (error) throw new Error(error.message)
   } else {
+    const limitResult = await checkLimit('quotes')
+    if (!limitResult.ok) return { limitExceeded: true, limit: limitResult.limit, current: limitResult.current }
+
     const { error } = await supabase
       .from('quotes')
       .insert({

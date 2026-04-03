@@ -2,6 +2,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { checkLimit } from './checkLimit'
 import type { Contract } from './types'
 
 function rowToContract(row: Record<string, unknown>): Contract {
@@ -74,6 +75,9 @@ export async function saveContractAction(id: string | null, formData: FormData) 
 
     if (error) throw new Error(error.message)
   } else {
+    const limitResult = await checkLimit('contracts')
+    if (!limitResult.ok) return { limitExceeded: true, limit: limitResult.limit, current: limitResult.current }
+
     const { error } = await supabase
       .from('contracts')
       .insert({

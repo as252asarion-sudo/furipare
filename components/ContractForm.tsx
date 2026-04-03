@@ -9,6 +9,7 @@ import { TEMPLATES } from '@/lib/templates'
 import { generateContractPdf } from '@/lib/pdf'
 import type { Contract, Profession, Client } from '@/lib/types'
 import { PROFESSIONS } from '@/lib/types'
+import UpgradeModal from './UpgradeModal'
 
 interface Props { initial?: Contract }
 
@@ -29,6 +30,7 @@ export default function ContractForm({ initial }: Props) {
   const [clauses, setClauses] = useState<string[]>(
     initial ? TEMPLATES[initial.profession].contractClauses.map(c => c) : TEMPLATES['designer'].contractClauses.map(c => c)
   )
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   useEffect(() => { getClients().then(setClients) }, [])
 
@@ -55,7 +57,15 @@ export default function ContractForm({ initial }: Props) {
     e.preventDefault()
     const formData = new FormData()
     formData.set('data', JSON.stringify(buildData()))
-    await saveContractAction(initial?.id ?? null, formData)
+    try {
+      const result = await saveContractAction(initial?.id ?? null, formData)
+      if (result && 'limitExceeded' in result && result.limitExceeded) {
+        setShowUpgradeModal(true)
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      if (!msg.includes('NEXT_REDIRECT')) throw err
+    }
   }
 
   async function handlePdf() {
@@ -72,6 +82,8 @@ export default function ContractForm({ initial }: Props) {
   }
 
   return (
+    <>
+    {showUpgradeModal && <UpgradeModal resource="contracts" limit={1} onClose={() => setShowUpgradeModal(false)} />}
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <h2 className="text-sm font-semibold text-slate-700 mb-4">基本情報</h2>
@@ -189,5 +201,6 @@ export default function ContractForm({ initial }: Props) {
         </button>
       </div>
     </form>
+    </>
   )
 }

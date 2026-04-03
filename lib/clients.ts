@@ -2,6 +2,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { checkLimit } from './checkLimit'
 import type { Client } from './types'
 
 export async function getClients(): Promise<Client[]> {
@@ -63,6 +64,9 @@ export async function createClient_(formData: FormData) {
   const contactName = formData.get('contactName') as string
   const email = formData.get('email') as string
   const address = formData.get('address') as string
+
+  const limitResult = await checkLimit('clients')
+  if (!limitResult.ok) return { limitExceeded: true, limit: limitResult.limit, current: limitResult.current }
 
   const { error } = await supabase.from('clients').insert({
     user_id: user.id,

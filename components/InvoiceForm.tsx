@@ -9,6 +9,7 @@ import { getSettings, fmt, calcSubtotal, calcTax, calcWithholding, calcTotal } f
 import { generateInvoicePdf } from '@/lib/pdf'
 import type { Invoice, EstimateItem, Profession, Client, Estimate } from '@/lib/types'
 import { PROFESSIONS } from '@/lib/types'
+import UpgradeModal from './UpgradeModal'
 
 interface Props { initial?: Invoice }
 
@@ -30,6 +31,7 @@ export default function InvoiceForm({ initial }: Props) {
   const [status, setStatus] = useState<Invoice['status']>(initial?.status ?? 'unpaid')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   useEffect(() => {
     getClients().then(setClients)
@@ -73,7 +75,12 @@ export default function InvoiceForm({ initial }: Props) {
     try {
       const formData = new FormData()
       formData.set('data', JSON.stringify(buildData()))
-      await saveInvoiceAction(initial?.id ?? null, formData)
+      const result = await saveInvoiceAction(initial?.id ?? null, formData)
+      if (result && 'limitExceeded' in result && result.limitExceeded) {
+        setShowUpgradeModal(true)
+        setSaving(false)
+        return
+      }
     } catch (err: unknown) {
       // redirect()はエラーとしてthrowされるが正常な遷移なので無視
       const msg = err instanceof Error ? err.message : String(err)
@@ -98,6 +105,8 @@ export default function InvoiceForm({ initial }: Props) {
   }
 
   return (
+    <>
+    {showUpgradeModal && <UpgradeModal resource="invoices" limit={3} onClose={() => setShowUpgradeModal(false)} />}
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* 見積書から取り込み */}
       {!initial && (
@@ -225,5 +234,6 @@ export default function InvoiceForm({ initial }: Props) {
         </button>
       </div>
     </form>
+    </>
   )
 }

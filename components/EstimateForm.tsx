@@ -9,6 +9,7 @@ import { TEMPLATES } from '@/lib/templates'
 import { generateEstimatePdf } from '@/lib/pdf'
 import type { Estimate, EstimateItem, Profession, Client } from '@/lib/types'
 import { PROFESSIONS } from '@/lib/types'
+import UpgradeModal from './UpgradeModal'
 
 interface Props { initial?: Estimate }
 
@@ -26,6 +27,7 @@ export default function EstimateForm({ initial }: Props) {
   const [note, setNote] = useState(initial?.note ?? '')
   const [validUntil, setValidUntil] = useState(initial?.validUntil ?? '')
   const [status, setStatus] = useState<Estimate['status']>(initial?.status ?? 'draft')
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   useEffect(() => { getClients().then(setClients) }, [])
 
@@ -53,7 +55,15 @@ export default function EstimateForm({ initial }: Props) {
     e.preventDefault()
     const formData = new FormData()
     formData.set('data', JSON.stringify(buildData()))
-    await saveEstimateAction(initial?.id ?? null, formData)
+    try {
+      const result = await saveEstimateAction(initial?.id ?? null, formData)
+      if (result && 'limitExceeded' in result && result.limitExceeded) {
+        setShowUpgradeModal(true)
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      if (!msg.includes('NEXT_REDIRECT')) throw err
+    }
   }
 
   async function handlePdf() {
@@ -70,6 +80,8 @@ export default function EstimateForm({ initial }: Props) {
   }
 
   return (
+    <>
+    {showUpgradeModal && <UpgradeModal resource="quotes" limit={3} onClose={() => setShowUpgradeModal(false)} />}
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* 基本情報 */}
       <div className="bg-white rounded-xl border border-slate-200 p-6">
@@ -198,5 +210,6 @@ export default function EstimateForm({ initial }: Props) {
         </button>
       </div>
     </form>
+    </>
   )
 }

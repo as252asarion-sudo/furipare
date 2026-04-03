@@ -1,13 +1,11 @@
 import { redirect } from 'next/navigation'
-import { getInvoiceCount } from '@/lib/invoices'
+import { checkLimit } from '@/lib/checkLimit'
 import PageHeader from '@/components/PageHeader'
 import InvoiceForm from '@/components/InvoiceForm'
 
-const FREE_PLAN_LIMIT = 3
-
 export default async function NewInvoicePage() {
-  const count = await getInvoiceCount()
-  if (count >= FREE_PLAN_LIMIT) {
+  const result = await checkLimit('invoices')
+  if (!result.ok) {
     redirect('/invoices')
   }
 

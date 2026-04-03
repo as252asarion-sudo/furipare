@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { calcSubtotal, calcTax, calcTotal } from './calc'
+import { checkLimit } from './checkLimit'
 import type { Invoice } from './types'
 
 function rowToInvoice(row: Record<string, unknown>): Invoice {
@@ -99,6 +100,9 @@ export async function saveInvoiceAction(id: string | null, formData: FormData) {
 
     if (error) throw new Error(error.message)
   } else {
+    const limitResult = await checkLimit('invoices')
+    if (!limitResult.ok) return { limitExceeded: true, limit: limitResult.limit, current: limitResult.current }
+
     const { error } = await supabase
       .from('invoices')
       .insert({
