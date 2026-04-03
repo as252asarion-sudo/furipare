@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server'
 import { stripe } from '@/lib/stripe'
 
 export async function POST(_request: NextRequest) {
+  try {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -47,4 +48,9 @@ export async function POST(_request: NextRequest) {
   })
 
   return Response.json({ url: session.url })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('[stripe/checkout]', message)
+    return Response.json({ error: message }, { status: 500 })
+  }
 }
