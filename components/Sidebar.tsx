@@ -9,7 +9,6 @@ import {
   Receipt,
   ScrollText,
   Settings,
-  Briefcase,
   LogOut,
 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
@@ -45,13 +44,10 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-56 bg-indigo-700 text-white flex flex-col min-h-full shrink-0">
-      <Link href="/" className="px-5 py-5 border-b border-indigo-600 block hover:bg-indigo-600 transition-colors">
-        <div className="flex items-center gap-2">
-          <Briefcase size={20} className="text-indigo-200" />
-          <span className="font-bold text-lg tracking-tight">フリパレ</span>
-        </div>
-        <p className="text-indigo-300 text-xs mt-0.5">ウラヤハカンパニー</p>
+    <aside className="w-56 bg-neutral-900 text-white flex flex-col min-h-full shrink-0">
+      <Link href="/" className="px-5 py-5 border-b border-neutral-800 block">
+        <span className="font-bold text-base tracking-tight text-white">フリパレ</span>
+        <p className="text-neutral-500 text-xs mt-0.5">ウラヤハカンパニー</p>
       </Link>
       <nav className="flex-1 px-3 py-4 space-y-1">
         {nav.map(({ href, label, icon: Icon }) => {
@@ -60,10 +56,10 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
                 active
-                  ? 'bg-white text-indigo-700'
-                  : 'text-indigo-100 hover:bg-indigo-600'
+                  ? 'bg-neutral-800 text-white'
+                  : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'
               }`}
             >
               <Icon size={16} />
@@ -72,18 +68,18 @@ export default function Sidebar() {
           )
         })}
       </nav>
-      <div className="px-4 py-4 border-t border-indigo-600 space-y-2">
+      <div className="px-4 py-4 border-t border-neutral-800 space-y-2">
         {user && (
-          <div className="text-xs text-indigo-300 truncate px-1" title={user.email ?? ''}>
+          <div className="text-xs text-neutral-500 truncate px-1" title={user.email ?? ''}>
             {user.email}
           </div>
         )}
         <div className="flex items-center justify-between">
-          <span className="text-xs text-indigo-400">v1.0.0 MVP</span>
+          <span className="text-xs text-neutral-600">v1.0.0 MVP</span>
           {user && (
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-1.5 text-xs text-indigo-300 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-white transition-colors"
               title="ログアウト"
             >
               <LogOut size={13} />

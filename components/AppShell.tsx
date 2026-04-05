@@ -6,7 +6,7 @@ import { Menu } from 'lucide-react'
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="h-full flex bg-slate-50">
+    <div className="h-full flex bg-app-bg">
       {/* デスクトップ用サイドバー（常時表示） */}
       <div className="hidden md:flex shrink-0">
         <Sidebar />
@@ -28,8 +28,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* メインエリア */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* モバイルヘッダー */}
-        <header className="md:hidden flex items-center h-14 px-4 bg-indigo-700 text-white shrink-0">
-          <button onClick={() => setOpen(true)} className="p-1.5 rounded hover:bg-indigo-600">
+        <header className="md:hidden flex items-center h-14 px-4 bg-neutral-900 text-white shrink-0">
+          <button onClick={() => setOpen(true)} className="p-1.5 rounded hover:bg-neutral-800">
             <Menu size={20} />
           </button>
           <span className="ml-3 font-bold text-lg tracking-tight">フリパレ</span>
