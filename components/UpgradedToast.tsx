@@ -21,7 +21,7 @@ export default function UpgradedToast() {
   if (!visible) return null
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-indigo-600 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-medium animate-fade-in">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-brand-primary text-white px-5 py-3 rounded-md flex items-center gap-3 text-sm font-medium animate-fade-in">
       <CheckCircle size={18} className="shrink-0" />
       アドバンスプランへようこそ！
     </div>

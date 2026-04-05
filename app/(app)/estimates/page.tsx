@@ -5,10 +5,10 @@ import PageHeader from '@/components/PageHeader'
 import DocumentList from '@/components/DocumentList'
 
 const STATUS_MAP = {
-  draft: { label: '下書き', cls: 'bg-slate-100 text-slate-600' },
-  sent: { label: '送付済み', cls: 'bg-blue-100 text-blue-700' },
-  approved: { label: '承認済み', cls: 'bg-green-100 text-green-700' },
-  rejected: { label: '却下', cls: 'bg-red-100 text-red-700' },
+  draft: { label: '下書き', cls: 'bg-neutral-100 text-neutral-600' },
+  sent: { label: '送付済み', cls: 'bg-brand-subtle text-brand-primary' },
+  approved: { label: '承認済み', cls: 'bg-success-bg text-success-text' },
+  rejected: { label: '却下', cls: 'bg-danger-bg text-danger-text' },
 }
 
 export default async function EstimatesPage() {
@@ -20,7 +20,7 @@ export default async function EstimatesPage() {
         title="見積書"
         description="クライアントへの見積もりを管理します"
         action={
-          <Link href="/estimates/new" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg flex items-center gap-2">
+          <Link href="/estimates/new" className="bg-brand-primary hover:bg-brand-dark text-white text-sm font-medium px-4 py-2 rounded-md flex items-center gap-2 transition-colors">
             <Plus size={14} /> 新規作成
           </Link>
         }

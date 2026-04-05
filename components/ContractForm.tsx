@@ -85,53 +85,53 @@ export default function ContractForm({ initial }: Props) {
     <>
     {showUpgradeModal && <UpgradeModal resource="contracts" limit={1} onClose={() => setShowUpgradeModal(false)} />}
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
-        <h2 className="text-sm font-semibold text-slate-700 mb-4">基本情報</h2>
+      <div className="bg-white rounded-lg border border-neutral-200 p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 mb-4">基本情報</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">クライアント <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">クライアント <span className="text-red-500">*</span></label>
             <select required value={clientId} onChange={e => setClientId(e.target.value)}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary">
               <option value="">選択してください</option>
               {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">案件名 <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">案件名 <span className="text-red-500">*</span></label>
             <input required value={projectName} onChange={e => setProjectName(e.target.value)}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Webサイトデザイン制作" />
+              className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary" placeholder="Webサイトデザイン制作" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">職種</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">職種</label>
             <select value={profession} onChange={e => applyTemplate(e.target.value as Profession)}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary">
               {Object.entries(PROFESSIONS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">契約金額（税込）</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">契約金額（税込）</label>
             <input type="number" min={0} value={amount} onChange={e => setAmount(Number(e.target.value))}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">開始日</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">開始日</label>
             <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">終了日（納期）</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">終了日（納期）</label>
             <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">修正回数</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">修正回数</label>
             <input type="number" min={0} value={revisionCount} onChange={e => setRevisionCount(Number(e.target.value))}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">ステータス</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">ステータス</label>
             <select value={status} onChange={e => setStatus(e.target.value as Contract['status'])}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary">
               <option value="draft">下書き</option>
               <option value="sent">送付済み</option>
               <option value="signed">締結済み</option>
@@ -141,7 +141,7 @@ export default function ContractForm({ initial }: Props) {
 
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">著作権の帰属</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-2">著作権の帰属</label>
             <div className="flex gap-3">
               {[{ v: 'client', l: 'クライアント' }, { v: 'freelancer', l: '自分（フリーランサー）' }].map(({ v, l }) => (
                 <label key={v} className="flex items-center gap-2 text-sm cursor-pointer">
@@ -152,7 +152,7 @@ export default function ContractForm({ initial }: Props) {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">ポートフォリオ掲載</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-2">ポートフォリオ掲載</label>
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input type="checkbox" checked={portfolioAllowed} onChange={e => setPortfolioAllowed(e.target.checked)} className="rounded" />
               掲載を許可する
@@ -161,42 +161,42 @@ export default function ContractForm({ initial }: Props) {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
+      <div className="bg-white rounded-lg border border-neutral-200 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-slate-700">契約条項</h2>
-          <span className="text-xs text-slate-400">職種に応じてテンプレートが自動入力されます</span>
+          <h2 className="text-sm font-semibold text-neutral-700">契約条項</h2>
+          <span className="text-xs text-neutral-400">職種に応じてテンプレートが自動入力されます</span>
         </div>
         <div className="space-y-3">
           {clauses.map((clause, idx) => (
             <div key={idx} className="flex gap-2 items-start">
-              <span className="text-xs text-slate-400 mt-2.5 w-5 shrink-0">{idx + 1}.</span>
+              <span className="text-xs text-neutral-400 mt-2.5 w-5 shrink-0">{idx + 1}.</span>
               <textarea value={clause} onChange={e => setClause(idx, e.target.value)} rows={2}
-                className="flex-1 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                className="flex-1 border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary" />
               <button type="button" onClick={() => removeClause(idx)} className="text-red-400 hover:text-red-600 mt-2 p-1 rounded hover:bg-red-50">
                 <Trash2 size={13} />
               </button>
             </div>
           ))}
-          <button type="button" onClick={addClause} className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800">
+          <button type="button" onClick={addClause} className="flex items-center gap-1 text-sm text-brand-primary hover:text-brand-dark">
             <Plus size={14} /> 条項を追加
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
-        <label className="block text-sm font-medium text-slate-700 mb-1">備考・特記事項</label>
+      <div className="bg-white rounded-lg border border-neutral-200 p-6">
+        <label className="block text-sm font-medium text-neutral-700 mb-1">備考・特記事項</label>
         <textarea value={note} onChange={e => setNote(e.target.value)} rows={3}
-          className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+          className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary" />
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors cursor-pointer">
+        <button type="submit" className="bg-brand-primary hover:bg-brand-dark text-white text-sm font-medium px-5 py-2 rounded-md transition-colors cursor-pointer">
           {initial ? '更新する' : '保存する'}
         </button>
-        <button type="button" onClick={handlePdf} className="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-sm font-medium px-5 py-2 rounded-lg transition-colors cursor-pointer">
+        <button type="button" onClick={handlePdf} className="flex items-center gap-2 border border-neutral-200 hover:bg-neutral-50 text-sm font-medium px-5 py-2 rounded-md transition-colors cursor-pointer">
           <Download size={14} /> PDF出力
         </button>
-        <button type="button" onClick={() => router.push('/contracts')} className="text-sm text-slate-500 hover:text-slate-800 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+        <button type="button" onClick={() => router.push('/contracts')} className="text-sm text-neutral-500 hover:text-neutral-800 px-4 py-2 rounded-md border border-neutral-200 hover:bg-neutral-50 cursor-pointer">
           キャンセル
         </button>
       </div>
