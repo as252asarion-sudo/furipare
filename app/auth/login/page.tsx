@@ -113,7 +113,7 @@ export default function LoginPage() {
         )}
 
         <p className="mt-6 text-center text-xs text-neutral-400">
-          ウラヤハカンパニー &copy; 2024
+          ウラヤハカンパニー &copy; 2026
         </p>
       </div>
     </div>

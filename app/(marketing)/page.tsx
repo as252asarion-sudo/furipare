@@ -214,7 +214,7 @@ export default function LandingPage() {
           <span className="font-semibold text-neutral-900 text-sm">フリパレ</span>
           <div className="flex items-center gap-4">
             <Link href="/legal/tokusho" className="hover:text-neutral-600 transition-colors">特定商取引法に基づく表記</Link>
-            <p>&copy; 2025 ウラヤハカンパニー</p>
+            <p>&copy; 2026 ウラヤハカンパニー</p>
           </div>
         </div>
       </footer>
