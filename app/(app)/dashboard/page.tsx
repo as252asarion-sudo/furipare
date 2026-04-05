@@ -57,10 +57,8 @@ export default async function Dashboard() {
               <span className="text-neutral-400">
                 入金待ち <span className="text-white font-semibold">¥{fmt(unpaidAmount)}</span>
               </span>
-              {overdueCount > 0 ? (
+              {overdueCount > 0 && (
                 <span className="text-danger-text font-semibold">期日超過 {overdueCount}件</span>
-              ) : (
-                <span className="text-neutral-600">期日超過 0件</span>
               )}
             </div>
           </div>
@@ -77,7 +75,7 @@ export default async function Dashboard() {
 
       {/* Stats bar: overlaps hero */}
       <div className="-mt-8 mb-8">
-        <div className="bg-white border border-neutral-200 rounded-lg grid grid-cols-4 divide-x divide-neutral-200 shadow-sm">
+        <div className="bg-white border border-neutral-200 rounded-lg grid grid-cols-2 sm:grid-cols-4 divide-x divide-neutral-200">
           {stats.map(({ label, value, icon: Icon, href }) => (
             <Link key={href} href={href} className="px-5 py-4 hover:bg-neutral-50 transition-colors group">
               <p className="text-2xl font-bold text-neutral-900 tabular-nums group-hover:text-brand-primary transition-colors">{value}</p>
@@ -145,7 +143,7 @@ export default async function Dashboard() {
 
           {/* その他アクション */}
           <div>
-            <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-widest mb-3">その他</h2>
+            <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-widest mb-3">書類を作成</h2>
             <div className="space-y-2">
               <Link href="/contracts/new" className="flex items-center gap-2 w-full border border-neutral-200 hover:border-neutral-300 bg-white text-neutral-700 text-sm font-medium px-4 py-2.5 rounded-md transition-colors">
                 <Plus size={13} />契約書を作成
