@@ -96,8 +96,12 @@ export default async function BlogPostPage({ params }: Props) {
       {/* Footer */}
       <footer className="border-t border-neutral-200 py-8 mt-8">
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between text-sm text-neutral-400">
-          <span className="font-semibold text-brand-primary">フリパレ</span>
-          <p>&copy; 2026 ウラヤハカンパニー</p>
+          <Link href="/" className="font-semibold text-brand-primary hover:opacity-80 transition-opacity">フリパレ</Link>
+          <div className="flex items-center gap-4">
+            <Link href="/blog" className="hover:text-neutral-600 transition-colors">ブログ一覧</Link>
+            <Link href="/#pricing" className="hover:text-neutral-600 transition-colors">料金</Link>
+            <p>&copy; 2026 ウラヤハカンパニー</p>
+          </div>
         </div>
       </footer>
     </div>

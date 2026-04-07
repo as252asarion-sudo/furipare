@@ -35,12 +35,17 @@ export default function LandingPage() {
       <header className="sticky top-0 z-10 bg-neutral-50/90 backdrop-blur-sm border-b border-neutral-200">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <span className="font-bold text-xl tracking-tight text-neutral-900">フリパレ</span>
-          <Link
-            href="/dashboard"
-            className="bg-brand-primary hover:bg-brand-dark text-white text-sm font-medium px-4 py-2 rounded-md transition-colors"
-          >
-            無料ではじめる
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link href="/blog" className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">
+              ブログ
+            </Link>
+            <Link
+              href="/dashboard"
+              className="bg-brand-primary hover:bg-brand-dark text-white text-sm font-medium px-4 py-2 rounded-md transition-colors"
+            >
+              無料ではじめる
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -213,6 +218,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between text-sm text-neutral-400">
           <span className="font-semibold text-neutral-900 text-sm">フリパレ</span>
           <div className="flex items-center gap-4">
+            <Link href="/blog" className="hover:text-neutral-600 transition-colors">ブログ</Link>
             <Link href="/legal/tokusho" className="hover:text-neutral-600 transition-colors">特定商取引法に基づく表記</Link>
             <p>&copy; 2026 ウラヤハカンパニー</p>
           </div>
