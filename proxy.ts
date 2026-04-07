@@ -40,8 +40,12 @@ export async function proxy(request: NextRequest) {
   // Public paths that do not require authentication
   const isPublicPath =
     pathname === '/' ||
+    pathname === '/sitemap.xml' ||
+    pathname === '/robots.txt' ||
+    pathname.startsWith('/blog') ||
     pathname.startsWith('/lp') ||
     pathname.startsWith('/auth') ||
+    pathname.startsWith('/legal') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/favicon') ||
     pathname.match(/\.(ico|png|svg|jpg|jpeg|webp|css|js|woff|woff2|ttf)$/) !== null
