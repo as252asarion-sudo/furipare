@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { FileText, Receipt, ScrollText, CheckCircle } from 'lucide-react'
 
+export const dynamic = 'force-static'
+
 export const metadata: Metadata = {
   title: 'フリパレ | フリーランスの書類管理をシンプルに',
   description: 'フリーランス・副業ワーカー向けの書類管理ツール。見積書・請求書・契約書を一括管理。源泉徴収対応。無料プランあり。',
@@ -219,6 +221,8 @@ export default function LandingPage() {
           <span className="font-semibold text-neutral-900 text-sm">フリパレ</span>
           <div className="flex items-center gap-4">
             <Link href="/blog" className="hover:text-neutral-600 transition-colors">ブログ</Link>
+            <Link href="/legal/privacy" className="hover:text-neutral-600 transition-colors">プライバシーポリシー</Link>
+            <Link href="/legal/terms" className="hover:text-neutral-600 transition-colors">利用規約</Link>
             <Link href="/legal/tokusho" className="hover:text-neutral-600 transition-colors">特定商取引法に基づく表記</Link>
             <p>&copy; 2026 ウラヤハカンパニー</p>
           </div>
