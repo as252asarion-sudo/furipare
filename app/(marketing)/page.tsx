@@ -5,8 +5,8 @@ import { FileText, Receipt, ScrollText, CheckCircle } from 'lucide-react'
 export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
-  title: 'フリパレ | フリーランスの書類管理をシンプルに',
-  description: 'フリーランス・副業ワーカー向けの書類管理ツール。見積書・請求書・契約書を一括管理。源泉徴収対応。無料プランあり。',
+  title: 'フリパレ | はじめてのフリーランスに、はじめての書類ツール',
+  description: 'フリーランスを始めたばかりの人向けの書類管理ツール。見積書・請求書・契約書をクラウドで管理。ExcelやWordより安全・確実。無料プランあり。',
 }
 
 export default function LandingPage() {
@@ -54,10 +54,10 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-6 py-28 md:py-36 text-center">
         <h1 className="text-5xl md:text-6xl font-bold text-neutral-900 leading-tight tracking-tight mb-6">
-          フリーランスの書類管理を、<br className="hidden md:block" />もっとシンプルに。
+          はじめてのフリーランスに、<br className="hidden md:block" />はじめての書類ツール。
         </h1>
         <p className="text-lg text-neutral-500 max-w-xl mx-auto mb-10 leading-relaxed">
-          見積書・請求書・契約書を一括管理。フリーランスに必要な書類業務を、ブラウザひとつで完結。無料プランから始められます。
+          ExcelやWordで書類を作って不安になっていませんか？フリパレなら見積書・請求書・契約書をクラウドで一括管理。はじめてでも迷わず使えて、書類の紛失もありません。無料プランから始められます。
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -123,13 +123,13 @@ export default function LandingPage() {
             フリパレが選ばれる理由
           </h2>
           <p className="text-neutral-500 text-center mb-14 max-w-xl mx-auto">
-            フリーランス・副業ワーカーの実務を考えた機能が揃っています。
+            「書類のことを考えたくない」フリーランスのために作りました。
           </p>
           <div className="grid md:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {[
               { title: '無料プランあり', desc: 'クレジットカード不要で無料プランからスタート。仕事が増えてきたらアドバンスプランへ。' },
-              { title: '源泉徴収対応', desc: 'フリーランスの請求書に必要な源泉徴収税額を自動計算。正確な金額で請求できます。' },
-              { title: 'PDF出力', desc: '見積書・請求書・契約書をすぐにPDFとして出力。クライアントへの送付がスムーズです。' },
+              { title: '源泉徴収対応', desc: 'フリーランスの請求書に必要な源泉徴収税額を自動計算。知識がなくても正確な金額で請求できます。' },
+              { title: 'クラウド保存で紛失ゼロ', desc: 'ExcelやWordのように「ファイルが消えた」「どこに保存したかわからない」がなくなります。' },
               { title: 'ブラウザだけで完結', desc: 'インストール不要。ブラウザさえあればどこでも使えます。' },
             ].map(({ title, desc }) => (
               <div key={title} className="flex gap-4 bg-neutral-100 rounded-lg p-6 border border-neutral-200">
@@ -201,10 +201,10 @@ export default function LandingPage() {
       <section className="bg-neutral-900 py-24">
         <div className="max-w-5xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            まず無料ではじめる
+            はじめての書類、フリパレで。
           </h2>
           <p className="text-neutral-400 mb-10 max-w-xl mx-auto">
-            ブラウザを開いてすぐ使える、フリーランスのための書類管理ツールです。
+            クレジットカード不要。フリーランスを始めたその日から使えます。
           </p>
           <Link
             href="/dashboard"
