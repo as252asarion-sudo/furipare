@@ -1,10 +1,31 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const PUBLIC_PATHS = [
+  '/',
+  '/auth/login',
+  '/auth/callback',
+  '/auth/signout',
+  '/api/stripe/webhook',
+  '/sitemap.xml',
+  '/robots.txt',
+]
+
+const PUBLIC_PREFIXES = [
+  '/blog',
+  '/legal',
+  '/fotocalo',
+  '/_next',
+  '/favicon',
+]
+
+function isPublic(pathname: string): boolean {
+  if (PUBLIC_PATHS.includes(pathname)) return true
+  return PUBLIC_PREFIXES.some(p => pathname.startsWith(p))
+}
+
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  })
+  const response = NextResponse.next({ request })
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,53 +36,30 @@ export async function proxy(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
+          cookiesToSet.forEach(({ name, value, options }) => {
             request.cookies.set(name, value)
-          )
-          supabaseResponse = NextResponse.next({
-            request,
+            response.cookies.set(name, value, options)
           })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
         },
       },
     }
   )
 
-  // IMPORTANT: Call getUser() to refresh the session before any response is returned.
-  // Do NOT use getSession() here as it is not verified server-side.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
 
-  // Public paths that do not require authentication
-  const isPublicPath =
-    pathname === '/' ||
-    pathname === '/sitemap.xml' ||
-    pathname === '/robots.txt' ||
-    pathname.startsWith('/blog') ||
-    pathname.startsWith('/lp') ||
-    pathname.startsWith('/auth') ||
-    pathname.startsWith('/legal') ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon') ||
-    pathname.match(/\.(ico|png|svg|jpg|jpeg|webp|css|js|woff|woff2|ttf)$/) !== null
-
-  if (!user && !isPublicPath) {
+  if (!user && !isPublic(pathname)) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/auth/login'
     return NextResponse.redirect(loginUrl)
   }
 
-  return supabaseResponse
+  return response
 }
 
 export const config = {
   matcher: [
-    // Exclude static files, image optimizations, and Next.js internals
-    '/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
