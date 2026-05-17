@@ -15,6 +15,7 @@ const PUBLIC_PREFIXES = [
   '/blog',
   '/legal',
   '/fotocalo',
+  '/api/fotocalo',
   '/_next',
   '/favicon',
 ]
