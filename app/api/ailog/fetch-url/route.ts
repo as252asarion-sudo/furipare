@@ -4,6 +4,7 @@ export const runtime = 'nodejs'
 
 export type FetchUrlResult =
   | { type: 'gemini'; conversations: Array<{ question: string; answer: string }> }
+  | { type: 'youtube'; title: string; transcript: string }
   | { type: 'unsupported'; message: string }
   | { error: string }
 
@@ -27,12 +28,81 @@ function parseGemini(html: string): Array<{ question: string; answer: string }> 
   })
 }
 
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+}
+
+function extractYoutubeVideoId(url: string): string | null {
+  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/)
+  return m ? m[1] : null
+}
+
+async function fetchYoutubeTitle(videoId: string): Promise<string> {
+  try {
+    const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`, {
+      signal: AbortSignal.timeout(10000),
+    })
+    if (!res.ok) return '無題の動画'
+    const data = await res.json() as { title?: string }
+    return data.title ? decodeEntities(data.title) : '無題の動画'
+  } catch {
+    return '無題の動画'
+  }
+}
+
+// 字幕取得はSupadata(https://supadata.ai)経由。YouTube公式のtimedtext/InnerTube APIは
+// PoToken必須化により非公式スクレイピングでは取得不能になったため（2026-07検証済み）。
+async function fetchYoutubeTranscript(videoId: string): Promise<{ title: string; transcript: string } | { error: string }> {
+  const apiKey = process.env.SUPADATA_API_KEY
+  if (!apiKey) {
+    return { error: '字幕取得機能が設定されていません' }
+  }
+
+  const title = await fetchYoutubeTitle(videoId)
+
+  const res = await fetch(`https://api.supadata.ai/v1/transcript?url=https://www.youtube.com/watch?v=${videoId}`, {
+    headers: { 'x-api-key': apiKey },
+    signal: AbortSignal.timeout(15000),
+  })
+
+  if (res.status === 404) {
+    return { error: 'この動画には字幕が見つかりませんでした' }
+  }
+  if (!res.ok) {
+    return { error: `字幕データの取得に失敗しました: ${res.status}` }
+  }
+
+  const data = await res.json() as { content?: Array<{ text: string }> }
+  const transcript = (data.content ?? []).map((c) => c.text).join(' ').replace(/\s+/g, ' ').trim()
+
+  if (!transcript) {
+    return { error: 'この動画には字幕が見つかりませんでした' }
+  }
+
+  return { title, transcript }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { url } = await request.json() as { url: string }
 
     if (!url?.startsWith('https://')) {
       return Response.json({ error: 'https:// で始まるURLを入力してください' }, { status: 400 })
+    }
+
+    const videoId = extractYoutubeVideoId(url)
+    if (videoId) {
+      const result = await fetchYoutubeTranscript(videoId)
+      if ('error' in result) {
+        return Response.json({ error: result.error }, { status: 422 })
+      }
+      return Response.json({ type: 'youtube', ...result })
     }
 
     const res = await fetch(url, {
