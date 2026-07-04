@@ -11,9 +11,26 @@ export async function POST(request: NextRequest) {
   try {
     const { body } = await request.json() as { body: string }
 
+    const bodyLength = body.length
+    let lengthGuide: string
+    let maxTokens: number
+    if (bodyLength < 500) {
+      lengthGuide = '2〜3文'
+      maxTokens = 512
+    } else if (bodyLength < 2000) {
+      lengthGuide = '4〜6文'
+      maxTokens = 768
+    } else if (bodyLength < 6000) {
+      lengthGuide = '6〜10文程度（必要なら箇条書きも可）'
+      maxTokens = 1024
+    } else {
+      lengthGuide = '本文の情報量に見合った十分な文量で。重要なポイントを網羅し、必要なら複数段落や箇条書きも使う'
+      maxTokens = 2048
+    }
+
     const response = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 512,
+      max_tokens: maxTokens,
       messages: [{
         role: 'user',
         content: `以下はAIチャットの回答テキストです。このテキストから得られる「具体的な知識・事実・数値・ポイント」を抽出して、タイトル・要約・カテゴリをJSONで返してください。
@@ -23,7 +40,7 @@ export async function POST(request: NextRequest) {
 - このテキストを読んで実際に得られる知識・事実・結論そのものを書く
 - 具体的な数値・固有名詞・判断基準があれば必ず含める
 - 読んだ人が「何を学んだか」がわかる内容にする
-- 2〜4文でまとめる
+- 本文の分量が多いほど、要約も情報を落とさず比例して詳しくする。分量の目安: ${lengthGuide}
 
 テキスト:
 ${body}
