@@ -120,7 +120,9 @@ export async function POST(request: NextRequest) {
 
     const html = await res.text()
 
-    if (url.includes('gemini.google.com/share/')) {
+    // Geminiアプリの共有機能は share.gemini.google/xxx という短縮URLを発行するため、
+    // リダイレクト後の実URL(res.url)でも判定する（元のurlはgemini.google.com/share/を含まないことがある）
+    if (url.includes('gemini.google.com/share/') || res.url.includes('gemini.google.com/share/')) {
       const conversations = parseGemini(html)
       if (conversations.length > 0) {
         return Response.json({ type: 'gemini', conversations })
