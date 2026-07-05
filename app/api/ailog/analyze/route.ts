@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       maxTokens = 1024
     } else {
       lengthGuide = '本文の情報量に見合った十分な文量で、読み物として読みやすいように「## 見出し」で章立てする。各見出しの下は文章と「- 」の箇条書きを使い分けて具体的な事実・数値を書く'
-      maxTokens = 2048
+      maxTokens = 4096
     }
 
     // 長文・複数段落の要約はJSON文字列中の改行がエスケープされずJSON.parseに失敗することがあるため、
@@ -39,11 +39,13 @@ export async function POST(request: NextRequest) {
         input_schema: {
           type: 'object',
           properties: {
-            title: { type: 'string', description: 'タイトル（20字以内）' },
+            // max_tokens到達時の途中切れで欠損しやすいフィールドを後ろに回すため、
+            // 一番重要なsummaryを先頭に置く
             summary: { type: 'string', description: '要約本文' },
+            title: { type: 'string', description: 'タイトル（20字以内）' },
             category: { type: 'string', enum: [...CATEGORIES] },
           },
-          required: ['title', 'summary', 'category'],
+          required: ['summary', 'title', 'category'],
         },
       }],
       tool_choice: { type: 'tool', name: 'submit_analysis' },
@@ -67,7 +69,10 @@ ${body}
 
     const toolUse = response.content.find((b) => b.type === 'tool_use')
     if (!toolUse || toolUse.type !== 'tool_use') return Response.json({ error: 'パース失敗' }, { status: 500 })
-    const result = toolUse.input as { title: string; summary: string; category: string }
+    const result = toolUse.input as { title?: string; summary?: string; category?: string }
+    // max_tokens到達などでtool useの引数が途中で切れた場合、フィールドが欠けたままDBのNOT NULL制約に違反しうるため防御的に埋める
+    if (typeof result.summary !== 'string' || !result.summary) result.summary = body.slice(0, 200)
+    if (typeof result.title !== 'string' || !result.title) result.title = ''
     if (!CATEGORIES.includes(result.category as (typeof CATEGORIES)[number])) result.category = 'その他'
     return Response.json(result)
   } catch (e: any) {
