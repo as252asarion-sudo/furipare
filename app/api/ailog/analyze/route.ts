@@ -15,16 +15,16 @@ export async function POST(request: NextRequest) {
     let lengthGuide: string
     let maxTokens: number
     if (bodyLength < 500) {
-      lengthGuide = '2〜3文'
+      lengthGuide = '2〜3文の文章で。見出しは不要'
       maxTokens = 512
     } else if (bodyLength < 2000) {
-      lengthGuide = '4〜6文'
+      lengthGuide = '4〜6文の文章で。見出しは不要'
       maxTokens = 768
     } else if (bodyLength < 6000) {
-      lengthGuide = '6〜10文程度（必要なら箇条書きも可）'
+      lengthGuide = '6〜10文程度。内容が複数のトピックに分かれる場合のみ「## 見出し」で区切り、各見出しの下に文章または「- 」の箇条書きで書く'
       maxTokens = 1024
     } else {
-      lengthGuide = '本文の情報量に見合った十分な文量で。重要なポイントを網羅し、必要なら複数段落や箇条書きも使う'
+      lengthGuide = '本文の情報量に見合った十分な文量で、読み物として読みやすいように「## 見出し」で章立てする。各見出しの下は文章と「- 」の箇条書きを使い分けて具体的な事実・数値を書く'
       maxTokens = 2048
     }
 
