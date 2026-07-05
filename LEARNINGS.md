@@ -34,3 +34,9 @@ furipare 開発で得た再発防止メモ。横断的な学びは `~/.claude/LE
 - 原因: プロンプトで「## 見出し」付きの複数段落要約をJSON文字列として書かせていたが、モデルが生成するJSON内の改行が正しくエスケープされないことがあり`JSON.parse`が失敗していた（本番ログには500しか残らず、詳細な例外は`console.error`していなかったため特定に時間がかかった）
 - 解決: Anthropicのtool use（`tools`+`tool_choice: {type:'tool', name:...}`）に切り替え、SDKに構造化データのJSONエンコードを任せる形にした。`response.content`から`type: 'tool_use'`のブロックを探し`.input`をそのまま使う（正規表現でJSON片を抜き出して`JSON.parse`する自前実装をやめた）
 - 再発防止: LLMに複数行・長文を含む構造化データ（JSON等）を「テキストとして」書かせるのは避け、tool use / structured outputで返させる。またAPI側のcatchブロックでは`console.error`で詳細を残す（500とだけ返るとVercelログから原因が追えない）。クライアント側でAI解析が失敗した場合に静かにフォールバックする設計は、ユーザーに気づかれないまま不具合が放置されるリスクがある点も認識しておく
+
+## [2026-07-05] tool use化しても、max_tokens不足で引数が途中切れするとNOT NULL違反でクラッシュする
+- 問題: tool use化（上記エントリ）で直したはずが、同じ40分超動画で今度は`NOT NULL constraint failed: logs.summary`でアプリがクラッシュした
+- 原因: 「本文の情報量に見合った十分な文量」という指示で生成される要約が長すぎ、`max_tokens`(2048)に到達してtool useの引数生成が途中で切れ、`summary`フィールドが埋まる前に打ち切られてundefinedのままDBにINSERTされた（SQLiteのNOT NULL制約でクラッシュ）
+- 解決: 長文ティアのmax_tokensを4096に引き上げ、かつJSON Schemaの`properties`順を`summary`が先頭に来るよう並び替え（途中切れの影響を最も重要なフィールドが受けにくくする）。さらに`result.summary`/`result.title`が欠けていた場合のフォールバックをAPI側に追加し、クラッシュを防ぐ
+- 再発防止: LLMに「十分な文量」のように可変長の出力を求める時は、max_tokensに十分な余裕を持たせる。tool useで構造化出力させても、max_tokens到達によるレスポンス途中切れは起こりうるので、必須フィールドが欠けた場合のフォールバックは必ず入れる。DBのNOT NULLカラムに直結する値は特に、API層で型・空文字チェックをしてから渡す
