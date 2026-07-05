@@ -22,3 +22,15 @@ furipare 開発で得た再発防止メモ。横断的な学びは `~/.claude/LE
 - 原因: YouTubeが2025年頃からPoToken（BotGuard由来の証明トークン）を要求するようになり、非公式スクレイピングでは字幕テキストを取得できなくなった。`bgutils-js`で正規のPoToken生成手順を実装しても、`get_transcript` (InnerTube API) は10回中10回 `FAILED_PRECONDITION` で失敗（[LuanRT/YouTube.js#1102](https://github.com/LuanRT/YouTube.js/issues/1102) で同様の既知バグ報告あり）
 - 解決: サードパーティAPI（Supadata `https://api.supadata.ai/v1/transcript`、`x-api-key`ヘッダー認証、無料枠あり）に切り替えて解決。動画タイトルはYouTube公式の`oembed`エンドポイント（PoToken不要・安定）で取得
 - 再発防止: YouTube動画ページ・字幕の直接スクレイピングは試みる前に「PoToken必須化で機能しない」ことを前提に検討する。実装前に必ず実データで動作検証（`node`で単発スクリプトを書いて疎通確認）してから本実装に進む
+
+## [2026-07-05] Geminiアプリの共有リンクはshare.gemini.google短縮URLで飛んでくる
+- 問題: Gemini公式アプリの共有機能から実機でリンクを貼ったところ「対応していないURL」と判定された
+- 原因: `app/api/ailog/fetch-url`は入力URL文字列に`gemini.google.com/share/`が含まれるかで判定していたが、Geminiアプリの共有機能はGoogle公式のURL短縮サービス（`share.gemini.google/xxx`、レスポンスヘッダーに`LinkShortenerUi`）経由でリンクを発行するため、ドメインが一致せず判定漏れしていた
+- 解決: `res.url`（fetchがリダイレクトを追った後の最終URL）も判定対象に加えた。Node.jsのfetchはデフォルトでリダイレクトを追うため、最終的にgemini.google.com/share/に着地すればそちらで拾える
+- 再発防止: 外部サービスの「共有」機能が生成するURLは、Web版の直接リンクと形式が違う（短縮URL経由）ことがある。ドメイン文字列の完全一致で判定するのではなく、リダイレクト後の実URLも見るか、実機の共有機能で発行される実際のURLを一度確認してから判定ロジックを書く
+
+## [2026-07-05] LLMに生JSONを書かせると長文・複数段落でパースが壊れる
+- 問題: `app/api/ailog/analyze`で長尺YouTube動画の要約を保存すると、summaryが空・カテゴリが「その他」のまま保存される（`lib/store.tsx`の`addLog`がAI解析失敗を握りつぶす仕様のため気づきにくい）
+- 原因: プロンプトで「## 見出し」付きの複数段落要約をJSON文字列として書かせていたが、モデルが生成するJSON内の改行が正しくエスケープされないことがあり`JSON.parse`が失敗していた（本番ログには500しか残らず、詳細な例外は`console.error`していなかったため特定に時間がかかった）
+- 解決: Anthropicのtool use（`tools`+`tool_choice: {type:'tool', name:...}`）に切り替え、SDKに構造化データのJSONエンコードを任せる形にした。`response.content`から`type: 'tool_use'`のブロックを探し`.input`をそのまま使う（正規表現でJSON片を抜き出して`JSON.parse`する自前実装をやめた）
+- 再発防止: LLMに複数行・長文を含む構造化データ（JSON等）を「テキストとして」書かせるのは避け、tool use / structured outputで返させる。またAPI側のcatchブロックでは`console.error`で詳細を残す（500とだけ返るとVercelログから原因が追えない）。クライアント側でAI解析が失敗した場合に静かにフォールバックする設計は、ユーザーに気づかれないまま不具合が放置されるリスクがある点も認識しておく

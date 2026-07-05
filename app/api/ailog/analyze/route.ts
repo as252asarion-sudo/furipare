@@ -71,6 +71,7 @@ ${body}
     if (!CATEGORIES.includes(result.category as (typeof CATEGORIES)[number])) result.category = 'その他'
     return Response.json(result)
   } catch (e: any) {
+    console.error('ailog/analyze failed:', e)
     return Response.json({ error: e?.message ?? '解析失敗' }, { status: 500 })
   }
 }
