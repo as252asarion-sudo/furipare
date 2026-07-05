@@ -28,12 +28,28 @@ export async function POST(request: NextRequest) {
       maxTokens = 2048
     }
 
+    // 長文・複数段落の要約はJSON文字列中の改行がエスケープされずJSON.parseに失敗することがあるため、
+    // 生JSONをテキストで書かせず、tool useで構造化出力させる（SDKがJSONエンコードを保証する）
     const response = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: maxTokens,
+      tools: [{
+        name: 'submit_analysis',
+        description: 'テキストの要約結果を送信する',
+        input_schema: {
+          type: 'object',
+          properties: {
+            title: { type: 'string', description: 'タイトル（20字以内）' },
+            summary: { type: 'string', description: '要約本文' },
+            category: { type: 'string', enum: [...CATEGORIES] },
+          },
+          required: ['title', 'summary', 'category'],
+        },
+      }],
+      tool_choice: { type: 'tool', name: 'submit_analysis' },
       messages: [{
         role: 'user',
-        content: `以下はAIチャットの回答テキストです。このテキストから得られる「具体的な知識・事実・数値・ポイント」を抽出して、タイトル・要約・カテゴリをJSONで返してください。
+        content: `以下はAIチャットの回答テキストです。このテキストから得られる「具体的な知識・事実・数値・ポイント」を抽出して、submit_analysisツールでタイトル・要約・カテゴリを送信してください。
 
 【要約の書き方】
 - 「〇〇について説明しています」「〇〇を紹介しています」のような内容紹介は禁止
@@ -45,18 +61,14 @@ export async function POST(request: NextRequest) {
 テキスト:
 ${body}
 
-カテゴリは必ず次の6つのどれかを選んでください: コード, 健康, 料理, 仕事, 学習, その他
-
-JSONのみで返してください（説明文不要）。
-形式: {"title":"タイトル（20字以内）","summary":"要約","category":"カテゴリ名"}`,
+カテゴリは必ず次の6つのどれかを選んでください: コード, 健康, 料理, 仕事, 学習, その他`,
       }],
     })
 
-    const text = response.content[0].type === 'text' ? response.content[0].text : ''
-    const m = text.match(/\{[\s\S]*\}/)
-    if (!m) return Response.json({ error: 'パース失敗' }, { status: 500 })
-    const result = JSON.parse(m[0])
-    if (!CATEGORIES.includes(result.category)) result.category = 'その他'
+    const toolUse = response.content.find((b) => b.type === 'tool_use')
+    if (!toolUse || toolUse.type !== 'tool_use') return Response.json({ error: 'パース失敗' }, { status: 500 })
+    const result = toolUse.input as { title: string; summary: string; category: string }
+    if (!CATEGORIES.includes(result.category as (typeof CATEGORIES)[number])) result.category = 'その他'
     return Response.json(result)
   } catch (e: any) {
     return Response.json({ error: e?.message ?? '解析失敗' }, { status: 500 })
